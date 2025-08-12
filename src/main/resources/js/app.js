@@ -123,15 +123,4 @@ window.clearForm = function() {
 
     document.addEventListener('DOMContentLoaded', initTooltips);
     document.body.addEventListener('htmx:afterSwap', initTooltips);
-
-    function getExistingDocuments() {
-        const raw = document.getElementById("existing-documents-json");
-        if (!raw) return [];
-        try {
-            return JSON.parse(raw.textContent);
-        } catch (e) {
-            console.error("Invalid JSON for existingDocuments:", e);
-            return [];
-        }
-    }
 })();

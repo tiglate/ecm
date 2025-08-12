@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WarningsToErrorsPlugin = require('warnings-to-errors-webpack-plugin');
 
 
+// noinspection SpellCheckingInspection
 module.exports = (env, argv) => ({
   entry: {
     bundle: './src/main/resources/js/app.js'

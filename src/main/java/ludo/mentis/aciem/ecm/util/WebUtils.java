@@ -15,6 +15,7 @@ import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Component
@@ -38,7 +39,7 @@ public class WebUtils {
     }
 
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
     }
 
     public static String getMessage(final String code, final Object... args) {
@@ -91,7 +92,7 @@ public class WebUtils {
         next.setUrl(getStepUrl(page, page.nextOrLastPageable().getPageNumber()));
         steps.add(next);
 
-        final long rangeStart = page.getNumber() * page.getSize() + 1l;
+        final long rangeStart = (long) page.getNumber() * page.getSize() + 1L;
         final long rangeEnd = Math.min(rangeStart + page.getSize() - 1, page.getTotalElements());
         final String range = rangeStart == rangeEnd ? "" + rangeStart : rangeStart + " - " + rangeEnd;
         final PaginationModel paginationModel = new PaginationModel();

@@ -64,7 +64,12 @@ public class CredentialController {
         }
         final var sortOrder = this.sortUtils.addSortAttributesToModel(model, sort, pageable, Map.ofEntries(
                 entry("id", "sortById"),
-                entry("name", "sortByUsername")
+                entry("application", "sortByApplication"),
+                entry("username", "sortByUsername"),
+                entry("enabled", "sortByEnabled"),
+                entry("version", "sortByVersion"),
+                entry("createdAt", "sortByCreatedAt"),
+                entry("createdBy", "sortByCreatedBy")
         ));
         final var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortOrder);
         final var credentials = credentialService.findAll(filter, pageRequest);

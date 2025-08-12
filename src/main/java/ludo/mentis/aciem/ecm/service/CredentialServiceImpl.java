@@ -2,6 +2,7 @@ package ludo.mentis.aciem.ecm.service;
 
 import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
+import ludo.mentis.aciem.ecm.model.CredentialSearchDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.repos.CredentialRepository;
 import ludo.mentis.aciem.ecm.exception.NotFoundException;
@@ -28,9 +29,20 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Page<CredentialDTO> findAll(CredentialDTO searchDTO, Pageable pageable) {
+    public Page<CredentialSearchDTO> findAll(CredentialDTO searchDTO, Pageable pageable) {
+        Long applicationId = searchDTO.getApplicationId();
+        Long environmentId = (searchDTO.getEnvironment() != null) ? searchDTO.getEnvironment().getId() : null;
+        Long credentialTypeId = (searchDTO.getCredentialType() != null) ? searchDTO.getCredentialType().getId() : null;
+        Boolean enabled = searchDTO.getEnabled();
+        String username = searchDTO.getUsername();
+        String createdBy = searchDTO.getCreatedBy();
         return credentialRepository.findAllBySearchCriteria(
-                searchDTO.getUsername(),
+                applicationId,
+                environmentId,
+                credentialTypeId,
+                enabled,
+                createdBy,
+                username,
                 pageable
         );
     }
