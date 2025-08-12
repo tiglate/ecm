@@ -1,6 +1,8 @@
 package ludo.mentis.aciem.ecm.domain;
 
 import jakarta.persistence.*;
+import ludo.mentis.aciem.ecm.model.CredentialType;
+import ludo.mentis.aciem.ecm.model.Environment;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;

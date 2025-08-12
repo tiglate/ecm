@@ -98,16 +98,16 @@ public class CredentialServiceImpl implements CredentialService {
         credential.setCreatedBy(credentialDTO.getCreatedBy());
         credential.setCreatedAt(credentialDTO.getCreatedAt());
 
-        if (credentialDTO.getPassword() != null && !credentialDTO.getPassword().isBlank()) {
-            var envelope = passwordService.encryptPasswordToEntity(credentialDTO.getPassword());
-            credential.setCipherEnvelope(envelope);
-        }
-
         final var application = credentialDTO.getApplicationId() == null
                 ? null
                 : applicationRepository.findById(credentialDTO.getApplicationId())
                                        .orElseThrow(() -> new NotFoundException("application not found"));
         credential.setApplication(application);
+
+        if (credentialDTO.getPassword() != null && !credentialDTO.getPassword().isBlank()) {
+            var envelope = passwordService.encryptPasswordToEntity(credentialDTO.getPassword());
+            credential.setCipherEnvelope(envelope);
+        }
 
         return credential;
     }

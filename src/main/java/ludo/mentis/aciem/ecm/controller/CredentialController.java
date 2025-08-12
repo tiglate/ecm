@@ -3,11 +3,10 @@ package ludo.mentis.aciem.ecm.controller;
 
 import jakarta.validation.Valid;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
-import ludo.mentis.aciem.ecm.domain.CredentialType;
-import ludo.mentis.aciem.ecm.domain.Environment;
+import ludo.mentis.aciem.ecm.model.CredentialType;
+import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
-import ludo.mentis.aciem.ecm.service.BusinessAppService;
 import ludo.mentis.aciem.ecm.service.CredentialService;
 import ludo.mentis.aciem.ecm.util.*;
 import org.springframework.data.domain.PageRequest;

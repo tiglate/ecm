@@ -3,8 +3,6 @@ package ludo.mentis.aciem.ecm.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import ludo.mentis.aciem.ecm.domain.CredentialType;
-import ludo.mentis.aciem.ecm.domain.Environment;
 
 import java.time.LocalDateTime;
 
