@@ -13,6 +13,14 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class BusinessApp {
 
+    public BusinessApp() {
+    }
+
+    public BusinessApp(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     @Id
     @Column(name = "id_application", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
