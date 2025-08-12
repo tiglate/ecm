@@ -30,19 +30,19 @@ public class Credential {
     @JoinColumn(name = "id_cipher_envelope", nullable = false)
     private CipherEnvelopeEntity cipherEnvelopeEntity;
 
+    // Persist the numeric environment ID; expose the enum via transient getter/setter
     @Column(name = "id_environment", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    private Environment environment;
+    private Long environmentId;
 
+    // Persist the numeric type ID; expose the enum via transient getter/setter
     @Column(name = "id_credential_type", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    private CredentialType credentialType;
+    private Long credentialTypeId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_application", nullable = false)
     private BusinessApp application;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -90,20 +90,56 @@ public class Credential {
         this.cipherEnvelopeEntity = cipherEnvelopeEntity;
     }
 
+    // Transient enum view backed by environmentId
+    @Transient
     public Environment getEnvironment() {
-        return environment;
+        if (environmentId == null) {
+            return null;
+        }
+        for (Environment env : Environment.values()) {
+            if (env.getId() == environmentId) {
+                return env;
+            }
+        }
+        throw new IllegalStateException("Environment ID " + environmentId + " is not mapped to an Environment enum value");
     }
 
     public void setEnvironment(Environment environment) {
-        this.environment = environment;
+        this.environmentId = (environment != null ? environment.getId() : null);
     }
 
+    public Long getEnvironmentId() {
+        return environmentId;
+    }
+
+    public void setEnvironmentId(Long environmentId) {
+        this.environmentId = environmentId;
+    }
+
+    // Transient enum view backed by credentialTypeId
+    @Transient
     public CredentialType getCredentialType() {
-        return credentialType;
+        if (credentialTypeId == null) {
+            return null;
+        }
+        for (CredentialType type : CredentialType.values()) {
+            if (type.getId() == credentialTypeId) {
+                return type;
+            }
+        }
+        throw new IllegalStateException("Credential type ID " + credentialTypeId + " is not mapped to a CredentialType enum value");
     }
 
     public void setCredentialType(CredentialType credentialType) {
-        this.credentialType = credentialType;
+        this.credentialTypeId = (credentialType != null ? credentialType.getId() : null);
+    }
+
+    public Long getCredentialTypeId() {
+        return credentialTypeId;
+    }
+
+    public void setCredentialTypeId(Long credentialTypeId) {
+        this.credentialTypeId = credentialTypeId;
     }
 
     public BusinessApp getApplication() {

@@ -1,17 +1,11 @@
 package ludo.mentis.aciem.ecm.service.crypto.aes;
 
+import jakarta.annotation.PreDestroy;
 import ludo.mentis.aciem.ecm.exception.CryptoException;
 import ludo.mentis.aciem.ecm.model.CipherEnvelope;
 import ludo.mentis.aciem.ecm.model.Kdf;
 import ludo.mentis.aciem.ecm.service.crypto.CryptoService;
 import org.springframework.stereotype.Service;
-
-import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.KeySpec;
-import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -19,6 +13,12 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
+import java.util.Objects;
 
 @Service
 public final class AesService implements CryptoService {
@@ -136,6 +136,7 @@ public final class AesService implements CryptoService {
         }
     }
 
+    @PreDestroy
     @Override
     public void close() {
         if (cfg.passphrase != null) {

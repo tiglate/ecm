@@ -76,7 +76,7 @@ public class CredentialServiceImpl implements CredentialService {
 
         var envelop = credential.getCipherEnvelope();
         if (envelop != null) {
-            var password = "teste"; //TODO: passwordService.decryptPasswordFromEntity(envelop);
+            var password = passwordService.decryptPasswordFromEntity(envelop);
             credentialDTO.setPassword(password);
         }
 

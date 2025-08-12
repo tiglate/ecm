@@ -23,9 +23,7 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public CipherEnvelope encryptPassword(String password) {
         byte[] aad = config.getAad().getBytes(StandardCharsets.UTF_8);
-        var envelope = cryptoService.encryptString(password, aad);
-        cryptoService.close();
-        return envelope;
+        return cryptoService.encryptString(password, aad);
     }
 
     @Override
