@@ -2,7 +2,6 @@ package ludo.mentis.aciem.ecm.service;
 
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.model.CredentialSearchDTO;
-import ludo.mentis.aciem.ecm.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

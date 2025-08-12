@@ -8,10 +8,7 @@ import ludo.mentis.aciem.ecm.model.CredentialType;
 import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.CredentialService;
-import ludo.mentis.aciem.ecm.util.CustomCollectors;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
-import ludo.mentis.aciem.ecm.util.SortUtils;
-import ludo.mentis.aciem.ecm.util.WebUtils;
+import ludo.mentis.aciem.ecm.util.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -78,7 +75,7 @@ public class CredentialController {
         final var credentials = credentialService.findAll(filter, pageRequest);
         model.addAttribute("credentials", credentials);
         model.addAttribute("filter", filter);
-        model.addAttribute("paginationModel", WebUtils.getPaginationModel(credentials));
+        model.addAttribute("paginationModel", PaginationUtils.getPaginationModel(credentials));
         return CONTROLLER_LIST;
     }
 

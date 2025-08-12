@@ -4,10 +4,7 @@ package ludo.mentis.aciem.ecm.controller;
 import jakarta.validation.Valid;
 import ludo.mentis.aciem.ecm.model.BusinessAppDTO;
 import ludo.mentis.aciem.ecm.service.BusinessAppService;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
-import ludo.mentis.aciem.ecm.util.ReferencedWarning;
-import ludo.mentis.aciem.ecm.util.SortUtils;
-import ludo.mentis.aciem.ecm.util.WebUtils;
+import ludo.mentis.aciem.ecm.util.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -58,7 +55,7 @@ public class BusinessAppController {
         final var businessApps = businessAppService.findAll(filter, pageRequest);
         model.addAttribute("businessApps", businessApps);
         model.addAttribute("filter", filter);
-        model.addAttribute("paginationModel", WebUtils.getPaginationModel(businessApps));
+        model.addAttribute("paginationModel", PaginationUtils.getPaginationModel(businessApps));
         return CONTROLLER_LIST;
     }
 
