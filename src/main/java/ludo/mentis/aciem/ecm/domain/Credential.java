@@ -1,41 +1,44 @@
 package ludo.mentis.aciem.ecm.domain;
-/*
+
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_credential")
 @EntityListeners(AuditingEntityListener.class)
-public class Credential implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Credential {
 
     @Id
     @Column(name = "id_credential", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_credential_next")
-    private Long nextCredentialId;
+    // Self-reference to the next version (null if this is the latest)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_credential_next")
+    private Credential nextCredential;
 
-    @Column(name = "id_cipher_envelope", nullable = false)
-    private Long cipherEnvelopeId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_cipher_envelope", nullable = false)
+    private CipherEnvelopeEntity cipherEnvelopeEntity;
 
-    // Persisted as FK id to tb_environment
     @Column(name = "id_environment", nullable = false)
-    private Long environmentId;
+    @Enumerated(EnumType.ORDINAL)
+    private Environment environment;
 
-    @Column(name = "id_application", nullable = false)
-    private Long applicationId;
-
-    // Persisted as FK id to tb_credential_type
     @Column(name = "id_credential_type", nullable = false)
-    private Long credentialTypeId;
+    @Enumerated(EnumType.ORDINAL)
+    private CredentialType credentialType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_application", nullable = false)
+    private BusinessApp application;
 
     @Column(nullable = false, length = 255)
     private String username;
@@ -49,11 +52,11 @@ public class Credential implements Serializable {
     @Column(length = 500)
     private String url;
 
-    @Lob
-    @Column
+    @Column(columnDefinition = "TEXT")
+    @JdbcTypeCode(SqlTypes.CLOB)
     private String notes;
 
-    //@LastModifiedBy
+    @LastModifiedBy
     @Column(name = "created_by", nullable = false, length = 45)
     private String createdBy;
 
@@ -69,64 +72,44 @@ public class Credential implements Serializable {
         this.id = id;
     }
 
-    public Long getNextCredentialId() {
-        return nextCredentialId;
+    public Credential getNextCredential() {
+        return nextCredential;
     }
 
-    public void setNextCredentialId(Long nextCredentialId) {
-        this.nextCredentialId = nextCredentialId;
+    public void setNextCredential(Credential nextCredential) {
+        this.nextCredential = nextCredential;
     }
 
-    public Long getCipherEnvelopeId() {
-        return cipherEnvelopeId;
+    public CipherEnvelopeEntity getCipherEnvelope() {
+        return cipherEnvelopeEntity;
     }
 
-    public void setCipherEnvelopeId(Long cipherEnvelopeId) {
-        this.cipherEnvelopeId = cipherEnvelopeId;
+    public void setCipherEnvelope(CipherEnvelopeEntity cipherEnvelopeEntity) {
+        this.cipherEnvelopeEntity = cipherEnvelopeEntity;
     }
 
-    public Long getEnvironmentId() {
-        return environmentId;
-    }
-
-    public void setEnvironmentId(Long environmentId) {
-        this.environmentId = environmentId;
-    }
-
-    // Convenience enum accessors for environment
-    @Transient
     public Environment getEnvironment() {
-        return Environment.fromId(this.environmentId);
+        return environment;
     }
 
     public void setEnvironment(Environment environment) {
-        this.environmentId = (environment != null ? environment.getId() : null);
+        this.environment = environment;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
-    }
-
-    public Long getCredentialTypeId() {
-        return credentialTypeId;
-    }
-
-    public void setCredentialTypeId(Long credentialTypeId) {
-        this.credentialTypeId = credentialTypeId;
-    }
-
-    // Convenience enum accessors for credential type
-    @Transient
     public CredentialType getCredentialType() {
-        return CredentialType.fromId(this.credentialTypeId);
+        return credentialType;
     }
 
     public void setCredentialType(CredentialType credentialType) {
-        this.credentialTypeId = (credentialType != null ? credentialType.getId() : null);
+        this.credentialType = credentialType;
+    }
+
+    public BusinessApp getApplication() {
+        return application;
+    }
+
+    public void setApplication(BusinessApp application) {
+        this.application = application;
     }
 
     public String getUsername() {
@@ -181,9 +164,7 @@ public class Credential implements Serializable {
         return createdAt;
     }
 
-    @SuppressWarnings("unused")
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }
-*/

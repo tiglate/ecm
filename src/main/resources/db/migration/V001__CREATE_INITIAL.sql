@@ -63,8 +63,8 @@ CREATE UNIQUE INDEX `uq_credential_type_name` ON `tb_credential_type` (`name` AS
 -- Table `tb_credential`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tb_credential` (
-  `id_credential` INT NOT NULL AUTO_INCREMENT,
-  `id_credential_next` INT NULL,
+  `id_credential` BIGINT NOT NULL AUTO_INCREMENT,
+  `id_credential_next` BIGINT NULL,
   `id_cipher_envelope` BIGINT NOT NULL,
   `id_environment` BIGINT NOT NULL,
   `id_application` BIGINT NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `tb_credential` (
   `created_by` VARCHAR(45) NOT NULL,
   `created_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id_credential`),
-  CONSTRAINT `fk_credentai_cipher_envelope`
+  CONSTRAINT `fk_credential_cipher_envelope`
     FOREIGN KEY (`id_cipher_envelope`)
     REFERENCES `tb_cipher_envelope` (`id_cipher_envelope`)
     ON DELETE NO ACTION

@@ -1,7 +1,6 @@
 package ludo.mentis.aciem.ecm.config;
 
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.cfg.MappingSettings;
 import org.hibernate.type.format.jackson.JacksonJsonFormatMapper;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -14,15 +13,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 
 
 @Configuration
 @EntityScan("ludo.mentis.aciem.ecm.domain")
 @EnableJpaRepositories("ludo.mentis.aciem.ecm.repos")
-@EnableJpaAuditing//(auditorAwareRef="auditorProvider")
+@EnableJpaAuditing(auditorAwareRef="auditorProvider")
 @EnableTransactionManagement
 public class DomainConfig {
 
@@ -31,13 +31,12 @@ public class DomainConfig {
         return properties -> properties.put(MappingSettings.JSON_FORMAT_MAPPER, new JacksonJsonFormatMapper(objectMapper));
     }
 
-    /*
     @Bean
-    AuditorAware<User> auditorProvider() {
+    AuditorAware<String> auditorProvider() {
         return () -> Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
-                .map(Authentication::getPrincipal)
-                .map(User.class::cast);
-    }*/
+                .map(p -> (UserDetails)p.getPrincipal())
+                .map(UserDetails::getUsername);
+    }
 }

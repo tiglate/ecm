@@ -3,7 +3,7 @@ package ludo.mentis.aciem.ecm.service;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.model.BusinessAppDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
-import ludo.mentis.aciem.ecm.util.NotFoundException;
+import ludo.mentis.aciem.ecm.exception.NotFoundException;
 import ludo.mentis.aciem.ecm.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

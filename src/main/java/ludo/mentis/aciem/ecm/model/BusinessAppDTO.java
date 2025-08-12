@@ -1,10 +1,10 @@
 package ludo.mentis.aciem.ecm.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import ludo.mentis.aciem.ecm.validation.BusinessAppNameUnique;
+
+import java.time.LocalDateTime;
 
 
 public class BusinessAppDTO {

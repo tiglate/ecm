@@ -1,8 +1,6 @@
 package ludo.mentis.aciem.ecm.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Map;
 import ludo.mentis.aciem.ecm.model.PaginationModel;
 import ludo.mentis.aciem.ecm.model.PaginationStep;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 
 @Component

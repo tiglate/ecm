@@ -3,6 +3,8 @@ package ludo.mentis.aciem.ecm.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import ludo.mentis.aciem.ecm.domain.CredentialType;
+import ludo.mentis.aciem.ecm.domain.Environment;
 
 import java.time.LocalDateTime;
 
@@ -10,25 +12,23 @@ public class CredentialDTO {
 
     private Long id;
 
-    private Long nextCredentialId;
+    @NotNull
+    private Environment environment;
 
     @NotNull
-    private Long cipherEnvelopeId;
-
-    @NotNull
-    private Long environmentId;
+    private CredentialType credentialType;
 
     @NotNull
     private Long applicationId;
-
-    @NotNull
-    private Long credentialTypeId;
 
     @NotBlank
     @Size(max = 255)
     private String username;
 
-    @NotNull
+    @NotBlank
+    @Size(max = 500)
+    private String password;
+
     private Integer version;
 
     @NotNull
@@ -39,39 +39,17 @@ public class CredentialDTO {
 
     private String notes;
 
-    @NotBlank
-    @Size(max = 45)
+    // Auditing/display fields
     private String createdBy;
-
     private LocalDateTime createdAt;
 
-    public CredentialDTO() { }
+    public CredentialDTO() {
+    }
 
-    public CredentialDTO(Long id,
-                         Long nextCredentialId,
-                         Long cipherEnvelopeId,
-                         Long environmentId,
-                         Long applicationId,
-                         Long credentialTypeId,
-                         String username,
-                         Integer version,
-                         Boolean enabled,
-                         String url,
-                         String notes,
-                         String createdBy,
-                         LocalDateTime createdAt) {
+    // Projection constructor used by CredentialRepository
+    public CredentialDTO(Long id, String username, LocalDateTime createdAt) {
         this.id = id;
-        this.nextCredentialId = nextCredentialId;
-        this.cipherEnvelopeId = cipherEnvelopeId;
-        this.environmentId = environmentId;
-        this.applicationId = applicationId;
-        this.credentialTypeId = credentialTypeId;
         this.username = username;
-        this.version = version;
-        this.enabled = enabled;
-        this.url = url;
-        this.notes = notes;
-        this.createdBy = createdBy;
         this.createdAt = createdAt;
     }
 
@@ -83,28 +61,20 @@ public class CredentialDTO {
         this.id = id;
     }
 
-    public Long getNextCredentialId() {
-        return nextCredentialId;
+    public Environment getEnvironment() {
+        return environment;
     }
 
-    public void setNextCredentialId(Long nextCredentialId) {
-        this.nextCredentialId = nextCredentialId;
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
-    public Long getCipherEnvelopeId() {
-        return cipherEnvelopeId;
+    public CredentialType getCredentialType() {
+        return credentialType;
     }
 
-    public void setCipherEnvelopeId(Long cipherEnvelopeId) {
-        this.cipherEnvelopeId = cipherEnvelopeId;
-    }
-
-    public Long getEnvironmentId() {
-        return environmentId;
-    }
-
-    public void setEnvironmentId(Long environmentId) {
-        this.environmentId = environmentId;
+    public void setCredentialType(CredentialType credentialType) {
+        this.credentialType = credentialType;
     }
 
     public Long getApplicationId() {
@@ -115,20 +85,20 @@ public class CredentialDTO {
         this.applicationId = applicationId;
     }
 
-    public Long getCredentialTypeId() {
-        return credentialTypeId;
-    }
-
-    public void setCredentialTypeId(Long credentialTypeId) {
-        this.credentialTypeId = credentialTypeId;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getVersion() {

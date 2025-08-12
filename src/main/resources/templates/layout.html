@@ -18,7 +18,7 @@
                     <span class="ps-1">Enterprise Credentials Manager</span>
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
-                        th:aria-label="#{navigation.toggle}" aria-controls="navbarToggle" aria-expanded="false">
+                        aria-label="Toggle navigation" aria-controls="navbarToggle" aria-expanded="false">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
@@ -31,12 +31,13 @@
                                     aria-expanded="false">Entities</button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
                                 <li><a th:href="@{/applications}" class="dropdown-item">Applications</a></li>
+                                <li><a th:href="@{/credentials}" class="dropdown-item">Credentials</a></li>
                             </ul>
                         </li>
                         <li class="navbar-item">
-                            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="nav-link">[[#{navigation.login}]]</a>
+                            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="nav-link">Login</a>
                             <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="nav-link">
-                                <input th:value="#{navigation.logout}" type="submit" class="unset" />
+                                <input th:value="Logout" type="submit" class="unset" />
                             </form>
                         </li>
                     </ul>

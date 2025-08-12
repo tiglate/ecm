@@ -1,6 +1,6 @@
 package ludo.mentis.aciem.ecm.controller;
 
-import ludo.mentis.aciem.ecm.util.WebUtils;
+import ludo.mentis.aciem.ecm.util.FlashMessages;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HomeController {
 
     @GetMapping("/")
-    public String index(
-            @RequestParam(name = "logoutSuccess", required = false) final Boolean logoutSuccess,
-            final Model model) {
+    public String index(@RequestParam(name = "logoutSuccess", required = false) final Boolean logoutSuccess,
+                        final Model model) {
         if (logoutSuccess == Boolean.TRUE) {
-            model.addAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("authentication.logout.success"));
+            model.addAttribute(FlashMessages.MSG_INFO, "Your logout was successful.");
         }
         return "home/index";
     }
