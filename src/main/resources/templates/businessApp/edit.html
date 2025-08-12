@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{layout}">
+<head>
+    <title>Edit Application</title>
+</head>
+<body>
+    <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
+    <div layout:fragment="content">
+        <div th:replace="~{fragments/header :: header('edit', 'Edit Application', 'businessAppForm', @{/applications})}"></div>
+        <div th:replace="~{fragments/form-utils::globalErrors('businessApp')}"></div>
+        <form th:action="${requestUri}" method="post" id="businessAppForm">
+            <th:block th:replace="~{businessApp/_form :: businessAppForm('edit', ${businessApp})}"></th:block>
+        </form>
+    </div>
+</body>
+</html>

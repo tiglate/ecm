@@ -1,0 +1,96 @@
+package ludo.mentis.aciem.ecm.service;
+
+import ludo.mentis.aciem.ecm.domain.BusinessApp;
+import ludo.mentis.aciem.ecm.model.BusinessAppDTO;
+import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
+import ludo.mentis.aciem.ecm.util.NotFoundException;
+import ludo.mentis.aciem.ecm.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+public class BusinessAppServiceImpl implements BusinessAppService {
+
+    private final BusinessAppRepository businessAppRepository;
+
+    public BusinessAppServiceImpl(final BusinessAppRepository businessAppRepository) {
+        this.businessAppRepository = businessAppRepository;
+    }
+
+    @Override
+    public Page<BusinessAppDTO> findAll(BusinessAppDTO searchDTO, Pageable pageable) {
+        return businessAppRepository.findAllBySearchCriteria(
+                searchDTO.getCode(),
+                searchDTO.getName(),
+                pageable
+        );
+    }
+
+    @Override
+    public BusinessAppDTO get(final Long id) {
+        return businessAppRepository.findById(id)
+                .map(businessApp -> mapToDTO(businessApp, new BusinessAppDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public Long create(final BusinessAppDTO businessAppDTO) {
+        var businessApp = mapToEntity(businessAppDTO);
+        return businessAppRepository.save(businessApp).getId();
+    }
+
+    @Override
+    public void update(final Long id, final BusinessAppDTO businessAppDTO) {
+        final BusinessApp businessApp = businessAppRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        mapToEntity(businessAppDTO, businessApp);
+        businessAppRepository.save(businessApp);
+    }
+
+    @Override
+    public void delete(final Long id) {
+        businessAppRepository.deleteById(id);
+    }
+
+    private BusinessAppDTO mapToDTO(final BusinessApp businessApp, final BusinessAppDTO businessAppDTO) {
+        businessAppDTO.setId(businessApp.getId());
+        businessAppDTO.setCode(businessApp.getCode());
+        businessAppDTO.setName(businessApp.getName());
+        businessAppDTO.setCreatedAt(businessApp.getCreatedAt());
+        businessAppDTO.setUpdatedAt(businessApp.getUpdatedAt());
+        return businessAppDTO;
+    }
+
+    private BusinessApp mapToEntity(final BusinessAppDTO businessAppDTO) {
+        return mapToEntity(businessAppDTO, new BusinessApp());
+    }
+
+    private BusinessApp mapToEntity(final BusinessAppDTO businessAppDTO, final BusinessApp businessApp) {
+        businessApp.setCode(businessAppDTO.getCode());
+        businessApp.setName(businessAppDTO.getName());
+        return businessApp;
+    }
+
+    @Override
+    public boolean nameExists(final String name) {
+        return businessAppRepository.existsByNameIgnoreCase(name);
+    }
+
+    @Override
+    public ReferencedWarning getReferencedWarning(final Long id) {
+        /*
+        final ReferencedWarning referencedWarning = new ReferencedWarning();
+        final BusinessApp businessApp = businessAppRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        var user = userRepository.findFirstByBusinessApp(businessApp);
+        if (user != null) {
+            referencedWarning.setKey("documentType.document.documentType.referenced");
+            referencedWarning.addParam(user.getId());
+            return referencedWarning;
+        }
+         */
+        return null;
+    }
+
+}

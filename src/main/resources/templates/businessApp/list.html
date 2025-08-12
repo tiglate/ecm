@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en"
+      layout:decorate="~{layout}">
+<head>
+    <title>Applications</title>
+</head>
+<body>
+    <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByIdLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByIdDirection" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByNameLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByNameDirection" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByCodeLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByCodeDirection" type="java.lang.String"*/-->
+    <div layout:fragment="content">
+        <div class="d-flex flex-wrap mb-4">
+            <h1 class="flex-grow-1">Applications</h1>
+            <div>
+                <a class="btn btn-primary ms-2"
+                   th:href="@{/applications/add}"><i class="bi-plus-circle"></i> Add</a>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                Filters
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <form id="searchForm" th:action="${requestUri}" th:object="${businessAppSearch}" method="get">
+                        <div class="row mb-3">
+                            <div class="col-3">
+                                <label for="txtCode" class="form-label">Code</label>
+                                <input type="text" id="txtCode" th:field="*{code}" class="form-control" />
+                            </div>
+                            <div class="col-9">
+                                <label for="txtName" class="form-label">Name</label>
+                                <input type="text" id="txtName" th:field="*{name}" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col d-flex justify-content-end">
+                                <input type="reset" value="Clear" class="btn btn-secondary me-2"
+                                       onClick="return clearForm();" onKeyDown="return clearForm();"/>
+                                <input type="submit" value="Search" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                Results
+            </div>
+            <div class="card-body">
+                <p class="card-text" th:if="${#lists.isEmpty(businessApps)}">No records were found</p>
+                <div th:if="${not #lists.isEmpty(businessApps)}" class="table-responsive">
+                    <table class="table table-sm table-striped table-hover align-middle">
+                        <thead>
+                        <tr>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Id', ${sortByIdLink}, ${sortByIdDirection}, 'id')}"></th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Code', ${sortByCodeLink}, ${sortByCodeDirection}, 'name')}"></th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Name', ${sortByNameLink}, ${sortByNameDirection}, 'name')}"></th>
+                            <th><!-- --></th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                        <tr th:each="businessApp : ${businessApps}">
+                            <td>[[${businessApp.id}]]</td>
+                            <td>[[${businessApp.code}]]</td>
+                            <td>[[${businessApp.name}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/applications/view/{id}(id=${businessApp.id})}"
+                                       class="btn btn-sm btn-secondary bi-eye"
+                                       title="View"></a>
+                                    <a th:href="@{/applications/edit/{id}(id=${businessApp.id})}"
+                                       class="btn btn-sm btn-secondary bi-pencil-square"
+                                       title="Edit"></a>
+                                    <form th:action="@{/applications/delete/{id}(id=${businessApp.id})}"
+                                          th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary bi-trash" title="Delete">
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <nav th:replace="~{fragments/form-utils::pagination()}"></nav>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

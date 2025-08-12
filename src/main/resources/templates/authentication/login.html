@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{layout}">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<div layout:fragment="content" class="login-container">
+    <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
+    <div class="login-card">
+        <div class="card shadow">
+            <div class="card-header">
+                Welcome
+            </div>
+            <div class="card-body">
+                <form th:action="${requestUri}" method="post" th:object="${authentication}">
+                    <div class="mb-3">
+                        <label for="txtUsername" class="form-label">Username</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bi-person"></span>
+                            <input type="text"
+                                   id="txtUsername"
+                                   class="form-control"
+                                   th:field="*{username}"
+                                   placeholder="Enter your username"
+                                   autofocus required />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txtPassword" class="form-label">Password</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bi-lock-fill"></span>
+                            <input type="password"
+                                   id="txtPassword"
+                                   class="form-control"
+                                   th:field="*{password}"
+                                   placeholder="Enter your password"
+                                   required />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

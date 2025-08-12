@@ -1,0 +1,137 @@
+############################
+# OS cruft
+############################
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+*.swp
+*.swo
+
+############################
+# Java / Build outputs
+############################
+# Compiled classes & generated junk
+*.class
+*.jar
+*.war
+*.ear
+*.exec
+
+# Maven & Gradle build dirs (any module)
+target/
+build/
+out/
+bin/
+
+# Keep build tools' wrappers tracked
+!gradlew
+!gradlew.bat
+!gradle/wrapper/**
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+############################
+# Spring Boot / App runtime
+############################
+# Logs & temp
+logs/
+*.log
+*.tmp
+tmp/
+hs_err_pid*
+replay_pid*
+uploads/
+
+# Local config (keep shared configs, ignore only local/private)
+application-*.local.properties
+application-*.local.yml
+application-local.properties
+application-local.yml
+.env
+.env.*
+!.env.example
+
+# DB files (common embedded DBs)
+*.h2.db
+*.mv.db
+*.trace.db
+derby.log
+
+############################
+# Node / NPM / Frontend
+############################
+# Dependencies & caches
+node/
+node_modules/
+**/node_modules/
+.npm/
+.npmrc.local
+.pnp.*
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Build artifacts (adjust if you commit compiled assets)
+dist/
+**/dist/
+**/build/
+coverage/
+.nyc_output/
+.parcel-cache/
+.vite/
+.next/
+storybook-static/
+
+# Lockfiles – KEEP THEM (good for reproducible builds)
+# (Intentionally not ignoring: package-lock.json / pnpm-lock.yaml / yarn.lock)
+
+############################
+# IDE / Tooling
+############################
+# IntelliJ / IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse / STS
+.project
+.classpath
+.factorypath
+.settings/
+.springBeans
+.apt_generated/
+.sts4-cache/
+.apt_generated
+
+# VS Code
+.vscode/
+.history/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# SonarQube, scanners, etc.
+.sonar/
+.scannerwork/
+
+############################
+# Misc
+############################
+# Archives you don’t want lingering
+*.zip
+*.tar
+*.tar.gz

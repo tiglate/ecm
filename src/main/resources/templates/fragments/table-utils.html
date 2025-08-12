@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Table Utils</title>
+</head>
+<body>
+    <table>
+        <thead>
+        <tr>
+            <th th:fragment="sortableColumnHeader(label, sortLink, sortDirection, property)" scope="col">
+                <a th:href="${sortLink}">
+                    [[${label}]]
+                    <span th:if="${sortDirection != null}"
+                          th:class="${#strings.equals(sortDirection, 'asc') ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'}"> </span>
+                </a>
+            </th>
+        </tr>
+    </table>
+</body>
+</html>

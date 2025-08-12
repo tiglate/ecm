@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Form Utils</title>
+</head>
+    <body>
+        <!--/*@thymesVar id="paginationModel" type="br.dev.ampliar.caipora.model.PaginationModel"*/-->
+        <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
+        <th:block th:fragment="pagination()" th:if="${paginationModel != null}">
+            <nav th:if="${paginationModel.steps.size > 3}">
+                <ul class="pagination m-0">
+                    <li th:each="step : ${paginationModel.steps}" th:classappend="${(step.active ? 'active' : '') + (step.disabled ? ' disabled' : '')}" class="page-item">
+                        <a th:href="${requestUri + step.url}" class="page-link">[[${step.label}]]</a>
+                    </li>
+                </ul>
+            </nav>
+            <p class="fw-normal small m-0 d-none d-xl-block d-xxl-block">[[${paginationModel.elements}]]</p>
+        </th:block>
+
+        <div th:fragment="fieldErrors(object, field)" th:object="${__${object}__}" th:remove="tag">
+            <div th:if="${#fields.hasErrors(field) || #fields.hasErrors(field + '*')}" class="invalid-feedback d-block">
+                <p th:each="fieldError : ${#fields.detailedErrors(field + '*')}" class="mb-0"
+                        >[[${(fieldError.fieldName != field ? fieldError.fieldName + ': ' : '') + fieldError.message}]]</p>
+            </div>
+        </div>
+
+        <div th:fragment="globalErrors(object)" th:object="${__${object}__}" th:remove="tag">
+            <div th:if="${#fields.hasGlobalErrors()}" class="invalid-feedback d-block">
+                <p th:each="globalError : ${#fields.globalErrors()}" class="mb-0">[[${globalError}]]</p>
+            </div>
+        </div>
+    </body>
+</html>

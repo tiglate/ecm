@@ -1,0 +1,54 @@
+package ludo.mentis.aciem.ecm.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.ldap.core.support.BaseLdapPathContextSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.ldap.LdapBindAuthenticationManagerFactory;
+import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
+import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@Configuration
+@EnableMethodSecurity
+public class LdapSecurityConfig {
+
+    @Bean
+    LdapAuthoritiesPopulator authorities(BaseLdapPathContextSource contextSource) {
+        var groupSearchBase = "ou=Groups";
+        var authorities = new DefaultLdapAuthoritiesPopulator(contextSource, groupSearchBase);
+        authorities.setGroupSearchFilter("(member={0})");
+        return authorities;
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(BaseLdapPathContextSource contextSource,
+                                                LdapAuthoritiesPopulator authorities) {
+        var factory = new LdapBindAuthenticationManagerFactory(contextSource);
+        factory.setUserSearchBase("ou=People");
+        factory.setUserSearchFilter("(uid={0})");
+        factory.setLdapAuthoritiesPopulator(authorities);
+        return factory.createAuthenticationManager();
+    }
+
+    @Bean
+    SecurityFilterChain formsSecurityConfigFilterChain(final HttpSecurity http) throws Exception {
+        return http.cors(withDefaults())
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/actuator/**"))
+            .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+            .formLogin(form -> form
+                    .loginPage("/login")
+                    .failureUrl("/login?loginError=true"))
+            .logout(logout -> logout
+                    .logoutSuccessUrl("/?logoutSuccess=true")
+                    .deleteCookies("JSESSIONID"))
+            .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login?loginRequired=true")))
+            .build();
+    }
+}
