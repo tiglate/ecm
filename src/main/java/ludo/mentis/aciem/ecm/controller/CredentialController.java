@@ -3,12 +3,15 @@ package ludo.mentis.aciem.ecm.controller;
 
 import jakarta.validation.Valid;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
+import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.model.CredentialType;
 import ludo.mentis.aciem.ecm.model.Environment;
-import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.CredentialService;
-import ludo.mentis.aciem.ecm.util.*;
+import ludo.mentis.aciem.ecm.util.CustomCollectors;
+import ludo.mentis.aciem.ecm.util.FlashMessages;
+import ludo.mentis.aciem.ecm.util.SortUtils;
+import ludo.mentis.aciem.ecm.util.WebUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -122,15 +125,8 @@ public class CredentialController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable final Long id,
                          final RedirectAttributes redirectAttributes) {
-        final ReferencedWarning referencedWarning = credentialService.getReferencedWarning(id);
-        if (referencedWarning != null) {
-            redirectAttributes.addFlashAttribute(FlashMessages.MSG_ERROR,
-                    WebUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
-        } else {
-            credentialService.delete(id);
-            FlashMessages.deleteSuccess(redirectAttributes, ENTITY_NAME);
-        }
+        credentialService.delete(id);
+        FlashMessages.deleteSuccess(redirectAttributes, ENTITY_NAME);
         return REDIRECT_TO_CONTROLLER_INDEX;
     }
-
 }

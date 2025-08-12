@@ -18,9 +18,4 @@ public interface CredentialService {
     void update(Long id, CredentialDTO credentialDTO);
 
     void delete(Long id);
-
-    boolean nameExists(String name);
-
-    ReferencedWarning getReferencedWarning(Long id);
-
 }

@@ -1,5 +1,6 @@
 package ludo.mentis.aciem.ecm.repos;
 
+import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.model.CredentialSearchDTO;
 import org.springframework.data.domain.Page;
@@ -55,5 +56,5 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
             Pageable pageable
     );
 
-    boolean existsByUsernameIgnoreCase(String username);
+    Credential findFirstByApplication(BusinessApp application);
 }

@@ -1,12 +1,11 @@
 package ludo.mentis.aciem.ecm.service;
 
 import ludo.mentis.aciem.ecm.domain.Credential;
+import ludo.mentis.aciem.ecm.exception.NotFoundException;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.model.CredentialSearchDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.repos.CredentialRepository;
-import ludo.mentis.aciem.ecm.exception.NotFoundException;
-import ludo.mentis.aciem.ecm.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -123,26 +122,4 @@ public class CredentialServiceImpl implements CredentialService {
 
         return credential;
     }
-
-    @Override
-    public boolean nameExists(final String name) {
-        return credentialRepository.existsByUsernameIgnoreCase(name);
-    }
-
-    @Override
-    public ReferencedWarning getReferencedWarning(final Long id) {
-        /*
-        final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final Credential credential = credentialRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
-        var user = userRepository.findFirstByCredential(credential);
-        if (user != null) {
-            referencedWarning.setKey("documentType.document.documentType.referenced");
-            referencedWarning.addParam(user.getId());
-            return referencedWarning;
-        }
-         */
-        return null;
-    }
-
 }

@@ -4,6 +4,7 @@ import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.model.BusinessAppDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.exception.NotFoundException;
+import ludo.mentis.aciem.ecm.repos.CredentialRepository;
 import ludo.mentis.aciem.ecm.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 public class BusinessAppServiceImpl implements BusinessAppService {
 
     private final BusinessAppRepository businessAppRepository;
+    private final CredentialRepository credentialRepository;
 
-    public BusinessAppServiceImpl(final BusinessAppRepository businessAppRepository) {
+    public BusinessAppServiceImpl(final BusinessAppRepository businessAppRepository,
+                                  final CredentialRepository credentialRepository) {
         this.businessAppRepository = businessAppRepository;
+        this.credentialRepository = credentialRepository;
     }
 
     @Override
@@ -79,17 +83,15 @@ public class BusinessAppServiceImpl implements BusinessAppService {
 
     @Override
     public ReferencedWarning getReferencedWarning(final Long id) {
-        /*
-        final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final BusinessApp businessApp = businessAppRepository.findById(id)
+        final var referencedWarning = new ReferencedWarning();
+        final var businessApp = businessAppRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        var user = userRepository.findFirstByBusinessApp(businessApp);
-        if (user != null) {
-            referencedWarning.setKey("documentType.document.documentType.referenced");
-            referencedWarning.addParam(user.getId());
+        var credential = credentialRepository.findFirstByApplication(businessApp);
+        if (credential != null) {
+            referencedWarning.setKey("businessApp.credential.referenced");
+            referencedWarning.addParam(credential.getId());
             return referencedWarning;
         }
-         */
         return null;
     }
 
