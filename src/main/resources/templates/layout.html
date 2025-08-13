@@ -1,21 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-            xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <!--suppress Annotator -->
     <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">ECM</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link th:if="${!isDevserver}" th:href="@{/css/bundle.css}" rel="stylesheet" />
-    <script th:src="@{/js/bundle.js}" defer></script>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.min.css}" rel="stylesheet" />
+    <link th:href="@{/static/css/app.css}" rel="stylesheet" />
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}" defer></script>
+    <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+    <script th:src="@{/static/js/app.js}" defer></script>
 </head>
 <body hx-boost="true">
     <header id="main-header" data-bs-theme="dark">
         <div class="container">
             <nav class="navbar navbar-expand-md">
                 <a th:href="@{/}" class="navbar-brand">
-                    <img th:src="@{/images/logo.svg}" alt="ECM" width="30" height="30" class="d-inline-block align-top" style="filter: invert(100%);">
+                    <img th:src="@{/static/images/logo.svg}" alt="ECM" width="30" height="30" class="d-inline-block align-top" style="filter: invert(100%);">
                     <span class="ps-1">Enterprise Credentials Manager</span>
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggle"

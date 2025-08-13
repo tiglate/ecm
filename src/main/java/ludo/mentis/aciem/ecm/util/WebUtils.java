@@ -18,8 +18,7 @@ public class WebUtils {
     private static MessageSource messageSource;
     private static LocaleResolver localeResolver;
 
-    public WebUtils(final MessageSource messageSource, final LocaleResolver localeResolver,
-            final TemplateEngine templateEngine, @Value("${app.baseHost}") final String baseHost) {
+    public WebUtils(final MessageSource messageSource, final LocaleResolver localeResolver) {
         WebUtils.messageSource = messageSource;
         WebUtils.localeResolver = localeResolver;
     }

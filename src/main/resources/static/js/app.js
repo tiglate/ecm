@@ -1,8 +1,3 @@
-import 'bootstrap';
-import htmx from 'htmx.org';
-import flatpickr from 'flatpickr';
-import 'scss/app.scss';
-
 /**
  * Register an event at the document for the specified selector,
  * so events are still catch after DOM changes.
@@ -20,14 +15,6 @@ handleEvent('change', '.js-selectlinks', function () {
     history.pushState({htmx: true}, '', this.value);
 });
 
-handleEvent('click', '.js-file-delete', function (event) {
-    const $fileDiv = event.target.parentElement;
-    const $fileRow = $fileDiv.previousElementSibling;
-    $fileRow.removeAttribute('disabled');
-    $fileRow.classList.remove('d-none');
-    $fileDiv.remove();
-});
-
 function __getFormIdFromDataSet(caller) {
     const formId = caller.dataset.formId;
     if (!formId) {
@@ -42,21 +29,21 @@ function __getFormIdFromDataSet(caller) {
     return form;
 }
 
-window.resetForm = function(caller) {
+function resetForm(caller) {
     const form = __getFormIdFromDataSet(caller);
     if (form != null) {
         form.reset();
     }
-};
+}
 
-window.submitForm = function(caller) {
+function submitForm(caller) {
     const form = __getFormIdFromDataSet(caller);
     if (form != null) {
-        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        form.submit();
     }
-};
+}
 
-window.clearForm = function() {
+function clearForm() {
     const form = document.getElementById('searchForm');
     const inputElements = form.querySelectorAll('input, select, textarea');
 
@@ -79,42 +66,10 @@ window.clearForm = function() {
         }
     });
     return false;
-};
+}
 
 (function () {
     'use strict';
-
-    function initDatepicker() {
-        document.querySelectorAll('.js-datepicker, .js-timepicker, .js-datetimepicker').forEach(($item) => {
-            const flatpickrConfig = {
-                allowInput: true,
-                time_24hr: true,
-                enableSeconds: true
-            };
-            if ($item.classList.contains('js-datepicker')) {
-                flatpickrConfig.dateFormat = 'Y-m-d';
-            } else if ($item.classList.contains('js-timepicker')) {
-                flatpickrConfig.enableTime = true;
-                flatpickrConfig.noCalendar = true;
-                flatpickrConfig.dateFormat = 'H:i:S';
-            } else { // datetimepicker
-                flatpickrConfig.enableTime = true;
-                flatpickrConfig.altInput = true;
-                flatpickrConfig.altFormat = 'Y-m-d H:i:S';
-                flatpickrConfig.dateFormat = 'Y-m-dTH:i:S';
-                // workaround label issue
-                flatpickrConfig.onReady = function () {
-                    const id = this.input.id;
-                    this.input.id = null;
-                    this.altInput.id = id;
-                };
-            }
-            flatpickr($item, flatpickrConfig);
-        });
-    }
-
-    document.addEventListener('htmx:afterSwap', initDatepicker);
-    initDatepicker();
 
     function initTooltips() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');

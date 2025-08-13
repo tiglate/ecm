@@ -38,17 +38,30 @@ public class LdapSecurityConfig {
 
     @Bean
     SecurityFilterChain formsSecurityConfigFilterChain(final HttpSecurity http) throws Exception {
-        return http.cors(withDefaults())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/actuator/**"))
-            .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
-            .formLogin(form -> form
-                    .loginPage("/login")
-                    .failureUrl("/login?loginError=true"))
-            .logout(logout -> logout
-                    .logoutSuccessUrl("/?logoutSuccess=true")
-                    .deleteCookies("JSESSIONID"))
-            .exceptionHandling(exception -> exception
-                    .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login?loginRequired=true")))
-            .build();
+        return http
+                .cors(withDefaults())
+                .csrf(csrf ->
+                        csrf.ignoringRequestMatchers("/actuator/**", "/oauth/**", "/api/**"))
+                .authorizeHttpRequests(authorize ->
+                        authorize.requestMatchers(
+                                        "/swagger-ui.html",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/login",
+                                        "/static/**",
+                                        "/webjars/**",
+                                        "/oauth/**",
+                                        "/actuator/**",
+                                        "/favicon.ico").permitAll()
+                                .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .failureUrl("/login?loginError=true"))
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/?logoutSuccess=true")
+                        .deleteCookies("JSESSIONID"))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login?loginRequired=true")))
+                .build();
     }
 }
