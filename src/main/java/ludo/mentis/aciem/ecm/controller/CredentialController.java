@@ -1,15 +1,14 @@
 package ludo.mentis.aciem.ecm.controller;
 
 
-import jakarta.validation.Valid;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
-import ludo.mentis.aciem.ecm.exception.IllegalOperationException;
-import ludo.mentis.aciem.ecm.model.CredentialDTO;
-import ludo.mentis.aciem.ecm.model.CredentialType;
-import ludo.mentis.aciem.ecm.model.Environment;
+import ludo.mentis.aciem.ecm.model.*;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.CredentialService;
-import ludo.mentis.aciem.ecm.util.*;
+import ludo.mentis.aciem.ecm.util.CustomCollectors;
+import ludo.mentis.aciem.ecm.util.FlashMessages;
+import ludo.mentis.aciem.ecm.util.PaginationUtils;
+import ludo.mentis.aciem.ecm.util.SortUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +17,7 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -113,7 +113,7 @@ public class CredentialController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("credential") @Valid final CredentialDTO credentialDTO,
+    public String add(@ModelAttribute("credential") @Validated(OnCreate.class) final CredentialDTO credentialDTO,
                       final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return CONTROLLER_ADD;
@@ -125,7 +125,7 @@ public class CredentialController {
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable final Long id,
-                       @ModelAttribute("credential") @Valid final CredentialDTO credentialDTO,
+                       @ModelAttribute("credential") @Validated(OnUpdate.class) final CredentialDTO credentialDTO,
                        final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return CONTROLLER_EDIT;

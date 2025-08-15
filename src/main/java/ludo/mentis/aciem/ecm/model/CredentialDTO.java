@@ -10,20 +10,20 @@ public class CredentialDTO {
 
     private Long id;
 
-    @NotNull
+    @NotNull(groups = {OnCreate.class, OnUpdate.class})
     private Environment environment;
 
-    @NotNull
+    @NotNull(groups = {OnCreate.class, OnUpdate.class})
     private CredentialType credentialType;
 
-    @NotNull
+    @NotNull(groups = {OnCreate.class, OnUpdate.class})
     private Long applicationId;
 
-    @NotBlank
+    @NotBlank(groups = {OnCreate.class})
     @Size(max = 255)
     private String username;
 
-    @NotBlank
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class})
     @Size(max = 500)
     private String password;
 
