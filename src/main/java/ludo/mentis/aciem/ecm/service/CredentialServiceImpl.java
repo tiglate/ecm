@@ -1,6 +1,7 @@
 package ludo.mentis.aciem.ecm.service;
 
 import ludo.mentis.aciem.ecm.domain.Credential;
+import ludo.mentis.aciem.ecm.exception.IllegalOperationException;
 import ludo.mentis.aciem.ecm.exception.NotFoundException;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.model.CredentialSearchDTO;
@@ -10,6 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -55,21 +59,48 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Long create(final CredentialDTO credentialDTO) {
+        credentialDTO.setEnabled(true);
         var credential = mapToEntity(credentialDTO);
         return credentialRepository.save(credential).getId();
     }
 
     @Override
     public void update(final Long id, final CredentialDTO credentialDTO) {
-        final Credential credential = credentialRepository.findById(id)
+        final var oldRecord = credentialRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(credentialDTO, credential);
-        credentialRepository.save(credential);
+
+        if (oldRecord.getNextCredential() != null) {
+            throw new IllegalOperationException("You cannot update an old version!");
+        }
+
+        var newRecord = mapToEntity(credentialDTO);
+        newRecord.setVersion(oldRecord.getVersion() + 1);
+        newRecord.setUsername(oldRecord.getUsername()); // the username cannot be changed
+        newRecord.setEnabled(true);
+
+        oldRecord.setNextCredential(credentialRepository.save(newRecord));
+        credentialRepository.save(oldRecord);
     }
 
     @Override
     public void delete(final Long id) {
-        credentialRepository.deleteById(id);
+        var credential = credentialRepository.findById(id).orElseThrow(NotFoundException::new);
+        credential.setEnabled(false);
+        credentialRepository.save(credential);
+    }
+
+    @Override
+    public List<Credential> findHistory(Long id) {
+        var list = new ArrayList<Credential>();
+        var credential = credentialRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        while (credential != null) {
+            list.add(credential);
+            var previous = credentialRepository.findByNextCredential(credential);
+            credential = previous.orElse(null);
+        }
+        list.sort((c1, c2) -> c2.getVersion().compareTo(c1.getVersion()));
+        return list;
     }
 
     private CredentialDTO mapToDTO(final Credential credential, final CredentialDTO credentialDTO) {
@@ -84,6 +115,7 @@ public class CredentialServiceImpl implements CredentialService {
         credentialDTO.setNotes(credential.getNotes());
         credentialDTO.setCreatedBy(credential.getCreatedBy());
         credentialDTO.setCreatedAt(credential.getCreatedAt());
+        credentialDTO.setIsLatest(credential.getNextCredential() == null);
 
         var envelop = credential.getCipherEnvelope();
         if (envelop != null) {

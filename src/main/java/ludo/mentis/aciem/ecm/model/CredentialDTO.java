@@ -29,13 +29,14 @@ public class CredentialDTO {
 
     private Integer version;
 
-    @NotNull
     private Boolean enabled;
 
     @Size(max = 500)
     private String url;
 
     private String notes;
+
+    private boolean isLatest = true;
 
     // Auditing/display fields
     private String createdBy;
@@ -129,6 +130,14 @@ public class CredentialDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public boolean getIsLatest() {
+        return isLatest;
+    }
+
+    public void setIsLatest(boolean isLatest) {
+        this.isLatest = isLatest;
     }
 
     public String getCreatedBy() {

@@ -3,6 +3,7 @@ package ludo.mentis.aciem.ecm.controller;
 
 import jakarta.validation.Valid;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
+import ludo.mentis.aciem.ecm.exception.IllegalOperationException;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.model.CredentialType;
 import ludo.mentis.aciem.ecm.model.Environment;
@@ -33,6 +34,7 @@ public class CredentialController {
     private static final String CONTROLLER_EDIT = "credential/edit";
     private static final String CONTROLLER_VIEW = "credential/view";
     private static final String CONTROLLER_LIST = "credential/list";
+    private static final String CONTROLLER_HISTORY = "credential/history";
     private static final String REDIRECT_TO_CONTROLLER_INDEX = "redirect:/credentials";
     private final CredentialService credentialService;
     private final BusinessAppRepository applicationRepository;
@@ -66,11 +68,13 @@ public class CredentialController {
                 entry("id", "sortById"),
                 entry("application", "sortByApplication"),
                 entry("username", "sortByUsername"),
-                entry("enabled", "sortByEnabled"),
                 entry("version", "sortByVersion"),
                 entry("createdAt", "sortByCreatedAt"),
                 entry("createdBy", "sortByCreatedBy")
         ));
+        if (filter.getEnabled() == null) {
+            filter.setEnabled(true);
+        }
         final var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortOrder);
         final var credentials = credentialService.findAll(filter, pageRequest);
         model.addAttribute("credentials", credentials);
@@ -85,9 +89,21 @@ public class CredentialController {
         return CONTROLLER_VIEW;
     }
 
+    @GetMapping("/history/{id}")
+    public String history(@PathVariable final Long id, final Model model) {
+        var credentials = credentialService.findHistory(id);
+        model.addAttribute("credentials", credentials);
+        return CONTROLLER_HISTORY;
+    }
+
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable final Long id, final Model model) {
-        model.addAttribute("credential", credentialService.get(id));
+    public String edit(@PathVariable final Long id, final Model model, final RedirectAttributes redirectAttributes) {
+        var credential = credentialService.get(id);
+        if (!credential.getIsLatest()) {
+            FlashMessages.error(redirectAttributes, "You cannot update an old version!");
+            return REDIRECT_TO_CONTROLLER_INDEX;
+        }
+        model.addAttribute("credential", credential);
         return CONTROLLER_EDIT;
     }
 

@@ -4,7 +4,7 @@
     <title>Form Utils</title>
 </head>
     <body>
-        <!--/*@thymesVar id="paginationModel" type="br.dev.ampliar.caipora.model.PaginationModel"*/-->
+        <!--/*@thymesVar id="paginationModel" type="ludo.mentis.aciem.ecm.model.PaginationModel"*/-->
         <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
         <th:block th:fragment="pagination()" th:if="${paginationModel != null}">
             <nav th:if="${paginationModel.steps.size > 3}">

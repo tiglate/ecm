@@ -110,7 +110,7 @@ CREATE INDEX `fk_credential_environment_idx` ON `tb_credential` (`id_environment
 
 CREATE INDEX `fk_credential_application_idx` ON `tb_credential` (`id_application` ASC) VISIBLE;
 
-CREATE UNIQUE INDEX `uq_credential` ON `tb_credential` (`id_environment` ASC, `id_application` ASC, `id_credential_type` ASC, `username` ASC, `version` ASC) VISIBLE;
+CREATE UNIQUE INDEX `uq_credential` ON `tb_credential` (`id_environment` ASC, `id_application` ASC, `id_credential_type` ASC, `username` ASC, `version` ASC, `enabled` ASC) VISIBLE;
 
 CREATE INDEX `fk_credential_credential_type_idx` ON `tb_credential` (`id_credential_type` ASC) VISIBLE;
 

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 
 public interface CredentialRepository extends JpaRepository<Credential, Long> {
 
@@ -40,7 +42,8 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
             " d.createdAt, " +
             " d.createdBy) " +
             "FROM Credential d " +
-            "WHERE (:applicationId IS NULL OR d.application.id = :applicationId) " +
+            "WHERE d.nextCredential IS NULL " +
+            "  AND (:applicationId IS NULL OR d.application.id = :applicationId) " +
             "  AND (:environmentId IS NULL OR d.environmentId = :environmentId) " +
             "  AND (:credentialTypeId IS NULL OR d.credentialTypeId = :credentialTypeId) " +
             "  AND (:enabled IS NULL OR d.enabled = :enabled) " +
@@ -57,4 +60,6 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
     );
 
     Credential findFirstByApplication(BusinessApp application);
+
+    Optional<Credential> findByNextCredential(Credential credential);
 }
