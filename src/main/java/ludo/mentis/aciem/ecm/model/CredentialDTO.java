@@ -42,16 +42,6 @@ public class CredentialDTO {
     private String createdBy;
     private LocalDateTime createdAt;
 
-    public CredentialDTO() {
-    }
-
-    // Projection constructor used by CredentialRepository
-    public CredentialDTO(Long id, String username, LocalDateTime createdAt) {
-        this.id = id;
-        this.username = username;
-        this.createdAt = createdAt;
-    }
-
     public Long getId() {
         return id;
     }
