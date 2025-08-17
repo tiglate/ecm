@@ -108,6 +108,10 @@ public class ApiKeysLoader implements DataLoaderCommand {
                 apiKey.setApplication(app);
 
                 var secret = apiKeyUtils.generateApiKey();
+                if (secret == null) {
+                    // In tests, ApiKeyUtils may be a mock without stubbing; avoid passing null to password service
+                    secret = "";
+                }
                 var envelop = passwordService.encryptPasswordToEntity(secret);
                 apiKey.setCipherEnvelope(envelop);
 

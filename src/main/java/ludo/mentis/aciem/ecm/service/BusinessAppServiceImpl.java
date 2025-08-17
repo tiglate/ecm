@@ -82,6 +82,11 @@ public class BusinessAppServiceImpl implements BusinessAppService {
     }
 
     @Override
+    public boolean codeExists(String code) {
+        return businessAppRepository.existsByCodeIgnoreCase(code);
+    }
+
+    @Override
     public ReferencedWarning getReferencedWarning(final Long id) {
         final var referencedWarning = new ReferencedWarning();
         final var businessApp = businessAppRepository.findById(id)

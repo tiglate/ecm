@@ -22,4 +22,5 @@ public interface BusinessAppService {
 
     ReferencedWarning getReferencedWarning(Long id);
 
+    boolean codeExists(String code);
 }

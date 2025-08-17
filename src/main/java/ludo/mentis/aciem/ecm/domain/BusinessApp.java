@@ -26,7 +26,7 @@ public class BusinessApp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true, length = 45)
     private String code;
 
     @Column(nullable = false, unique = true)

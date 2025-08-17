@@ -40,12 +40,16 @@ CREATE UNIQUE INDEX `uq_environment_name` ON `tb_environment` (`name` ASC) VISIB
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tb_application` (
   `id_application` BIGINT NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(45) NULL,
+  `code` VARCHAR(45) NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id_application`))
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `uq_application_name_idx` ON `tb_application` (`name` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `uq_application_code_idx` ON `tb_application` (`code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------

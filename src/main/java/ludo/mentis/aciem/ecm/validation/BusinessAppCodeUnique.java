@@ -18,28 +18,28 @@ import static java.lang.annotation.ElementType.*;
 
 
 /**
- * Validate that the name value isn't taken yet.
+ * Validate that the code value isn't taken yet.
  */
 @Target({ FIELD, METHOD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = BusinessAppNameUnique.BusinessAppNameUniqueValidator.class
+        validatedBy = BusinessAppCodeUnique.BusinessAppCodeUniqueValidator.class
 )
-public @interface BusinessAppNameUnique {
+public @interface BusinessAppCodeUnique {
 
-    String message() default "An application with the same name already exists.";
+    String message() default "An application with the same code already exists.";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class BusinessAppNameUniqueValidator implements ConstraintValidator<BusinessAppNameUnique, String> {
+    class BusinessAppCodeUniqueValidator implements ConstraintValidator<BusinessAppCodeUnique, String> {
 
         private final BusinessAppService businessAppService;
         private final HttpServletRequest request;
 
-        public BusinessAppNameUniqueValidator(final BusinessAppService businessAppService,
+        public BusinessAppCodeUniqueValidator(final BusinessAppService businessAppService,
                                               final HttpServletRequest request) {
             this.businessAppService = businessAppService;
             this.request = request;
@@ -57,7 +57,7 @@ public @interface BusinessAppNameUnique {
             if (currentId != null) {
                 try {
                     final var existing = businessAppService.get(Long.parseLong(currentId));
-                    if (existing != null && existing.getName() != null && value.equalsIgnoreCase(existing.getName())) {
+                    if (existing != null && existing.getCode() != null && value.equalsIgnoreCase(existing.getCode())) {
                         // value hasn't changed
                         return true;
                     }
@@ -65,7 +65,7 @@ public @interface BusinessAppNameUnique {
                     // if parse fails or service throws, fall back to existence check
                 }
             }
-            return !businessAppService.nameExists(value);
+            return !businessAppService.codeExists(value);
         }
 
     }

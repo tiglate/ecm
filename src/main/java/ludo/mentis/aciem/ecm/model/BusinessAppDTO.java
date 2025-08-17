@@ -2,6 +2,7 @@ package ludo.mentis.aciem.ecm.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import ludo.mentis.aciem.ecm.validation.BusinessAppCodeUnique;
 import ludo.mentis.aciem.ecm.validation.BusinessAppNameUnique;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,8 @@ public class BusinessAppDTO {
     @BusinessAppNameUnique
     private String name;
 
+    @NotBlank
+    @BusinessAppCodeUnique
     @Size(max = 45)
     private String code;
     
