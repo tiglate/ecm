@@ -8,25 +8,39 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
 
-@Component
+/**
+ * Utility class for web-related operations.
+ * <p>
+ * This class provides static methods to perform common web-related tasks,
+ * such as retrieving the current HttpServletRequest object.
+ * </p>
+ * <p>
+ * The class is designed to be non-instantiable and contains a private constructor
+ * to prevent instantiation.
+ * </p>
+ */
 public class WebUtils {
 
-    private static MessageSource messageSource;
-    private static LocaleResolver localeResolver;
-
-    public WebUtils(final MessageSource messageSource, final LocaleResolver localeResolver) {
-        WebUtils.messageSource = messageSource;
-        WebUtils.localeResolver = localeResolver;
+    /**
+     * Private constructor to prevent instantiation
+     */
+    private WebUtils() {
+        throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Retrieves the current HttpServletRequest object from the RequestContextHolder.
+     *
+     * @return the current HttpServletRequest object
+     * @throws IllegalStateException if the request attributes are not available
+     */
     public static HttpServletRequest getRequest() {
         var attributes = RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            throw new IllegalStateException("RequestContextHolder.getRequestAttributes() cannot be null");
+        }
         return !(attributes instanceof ServletRequestAttributes)
                 ? null
                 : ((ServletRequestAttributes) attributes).getRequest();
-    }
-
-    public static String getMessage(final String code, final Object... args) {
-        return messageSource.getMessage(code, args, code, localeResolver.resolveLocale(getRequest()));
     }
 }

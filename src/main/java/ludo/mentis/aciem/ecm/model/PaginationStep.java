@@ -1,6 +1,5 @@
 package ludo.mentis.aciem.ecm.model;
 
-
 public class PaginationStep {
 
     private boolean active = false;
@@ -8,19 +7,19 @@ public class PaginationStep {
     private String label;
     private String url;
 
-    public boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(final boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public boolean getDisabled() {
+    public boolean isDisabled() {
         return disabled;
     }
 
-    public void setDisabled(final boolean disabled) {
+    public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
 
@@ -28,7 +27,7 @@ public class PaginationStep {
         return label;
     }
 
-    public void setLabel(final String label) {
+    public void setLabel(String label) {
         this.label = label;
     }
 
@@ -36,8 +35,7 @@ public class PaginationStep {
         return url;
     }
 
-    public void setUrl(final String url) {
+    public void setUrl(String url) {
         this.url = url;
     }
-
 }

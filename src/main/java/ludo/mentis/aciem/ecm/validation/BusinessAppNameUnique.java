@@ -52,11 +52,18 @@ public @interface BusinessAppNameUnique {
                 return true;
             }
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
-                    ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
-            final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equalsIgnoreCase(businessAppService.get(Long.parseLong(currentId)).getName())) {
-                // value hasn't changed
-                return true;
+                    (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+            final String currentId = (pathVariables != null ? pathVariables.get("id") : null);
+            if (currentId != null) {
+                try {
+                    final var existing = businessAppService.get(Long.parseLong(currentId));
+                    if (existing != null && existing.getName() != null && value.equalsIgnoreCase(existing.getName())) {
+                        // value hasn't changed
+                        return true;
+                    }
+                } catch (Exception ignored) {
+                    // if parse fails or service throws, fall back to existence check
+                }
             }
             return !businessAppService.nameExists(value);
         }

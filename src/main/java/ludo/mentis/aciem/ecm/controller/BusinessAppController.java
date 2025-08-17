@@ -105,7 +105,7 @@ public class BusinessAppController {
         final ReferencedWarning referencedWarning = businessAppService.getReferencedWarning(id);
         if (referencedWarning != null) {
             redirectAttributes.addFlashAttribute(FlashMessages.MSG_ERROR,
-                    WebUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
+                    GlobalizationUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
         } else {
             businessAppService.delete(id);
             FlashMessages.deleteSuccess(redirectAttributes, ENTITY_NAME);

@@ -18,7 +18,7 @@ public class ApiKeysLoader implements DataLoaderCommand {
     private final RandomUtils randomUtils;
     private final PasswordService passwordService;
 
-    private static final String[] SCI_FI_SERVER_NAMES = {
+    protected static final String[] SCI_FI_SERVER_NAMES = {
             "DEV_VULCAN_CORE",
             "QA_DEATH_STAR",
             "UAT_TARDIS_NODE",
@@ -120,7 +120,7 @@ public class ApiKeysLoader implements DataLoaderCommand {
         return created;
     }
 
-    private String getRandomServerName(Environment environment) {
+    protected String getRandomServerName(Environment environment) {
         if (environment == null) {
             return null;
         }
@@ -134,6 +134,8 @@ public class ApiKeysLoader implements DataLoaderCommand {
         if (matchingServers.isEmpty()) {
             return null;
         }
-        return matchingServers.get(randomUtils.getRandomNumberInRange(0, matchingServers.size() - 1));
+        return randomUtils.pickRandomBoolean()
+                ? matchingServers.get(randomUtils.getRandomNumberInRange(0, matchingServers.size() - 1))
+                : null;
     }
 }

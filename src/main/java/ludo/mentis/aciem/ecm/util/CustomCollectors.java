@@ -7,9 +7,24 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
+/**
+ * Utility class providing custom collectors for use with Java Streams.
+ * <p>
+ * This class contains static methods that return collectors for specific use cases,
+ * such as collecting elements into a LinkedHashMap while preserving the order of elements.
+ * </p>
+ * <p>
+ * The class is designed to be non-instantiable and contains a private constructor
+ * to prevent instantiation.
+ * </p>
+ */
 public class CustomCollectors {
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private CustomCollectors() {
+        throw new IllegalStateException("Utility class");
     }
 
     /**
