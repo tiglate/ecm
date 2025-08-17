@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{layout}">
+<head>
+    <title>Edit API Key</title>
+</head>
+<body>
+    <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
+    <div layout:fragment="content">
+        <div th:replace="~{fragments/header :: header('edit', 'Edit API Key', 'apiKeyForm', @{/apiKeys})}"></div>
+        <div th:replace="~{fragments/form-utils::globalErrors('apiKey')}"></div>
+        <form th:action="${requestUri}" method="post" id="apiKeyForm">
+            <th:block th:replace="~{apiKey/_form :: apiKeyForm('edit', ${apiKey})}"></th:block>
+        </form>
+    </div>
+</body>
+</html>

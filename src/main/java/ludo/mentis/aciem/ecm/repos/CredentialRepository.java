@@ -15,6 +15,15 @@ import java.util.Optional;
 
 public interface CredentialRepository extends JpaRepository<Credential, Long> {
 
+    boolean existsByApplicationIdAndEnvironmentIdAndCredentialTypeIdAndUsernameAndVersionAndEnabled(
+            Long applicationId,
+            Long environmentId,
+            Long credentialTypeId,
+            String username,
+            Integer version,
+            Boolean enabled
+    );
+
     @Query("SELECT new ludo.mentis.aciem.ecm.model.CredentialSearchDTO(" +
             " d.id, " +
             " d.application.id, " +
@@ -59,7 +68,6 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
             @Param("username") String username,
             Pageable pageable
     );
-
 
     @Query("SELECT c FROM Credential c " +
             "WHERE c.nextCredential IS NULL " +

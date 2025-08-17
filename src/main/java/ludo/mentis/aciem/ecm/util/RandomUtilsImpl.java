@@ -59,4 +59,9 @@ public class RandomUtilsImpl implements RandomUtils {
         long randomDays = ThreadLocalRandom.current().nextLong(days + 1);
         return start.plusDays(randomDays);
     }
+
+    @Override
+    public int getRandomNumberInRange(int origin, int bound) {
+        return random.nextInt(origin, bound);
+    }
 }

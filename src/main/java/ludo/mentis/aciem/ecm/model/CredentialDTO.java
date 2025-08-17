@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
+@ludo.mentis.aciem.ecm.validation.CredentialUnique(groups = {OnCreate.class, OnUpdate.class})
 public class CredentialDTO {
 
     private Long id;

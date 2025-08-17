@@ -4,30 +4,30 @@
       lang="en"
       layout:decorate="~{layout}">
 <head>
-    <title>Credentials</title>
+    <title>API Keys</title>
 </head>
 <body>
     <!--/*@thymesVar id="requestUri" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="credential" type="ludo.mentis.aciem.ecm.model.CredentialSearchDTO"*/-->
-    <!--/*@thymesVar id="credentials" type="org.springframework.data.domain.Page<ludo.mentis.aciem.ecm.model.CredentialSearchDTO>"*/-->
+    <!--/*@thymesVar id="apiKey" type="ludo.mentis.aciem.ecm.model.ApiKeySearchDTO"*/-->
+    <!--/*@thymesVar id="apiKeys" type="org.springframework.data.domain.Page<ludo.mentis.aciem.ecm.model.ApiKeySearchDTO>"*/-->
     <!--/*@thymesVar id="sortByIdLink" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByIdDirection" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByApplicationLink" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByApplicationDirection" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="sortByUsernameLink" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="sortByUsernameDirection" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="sortByVersionLink" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="sortByVersionDirection" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByServerLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByServerDirection" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByCreatedAtLink" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByCreatedAtDirection" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="sortByCreatedByLink" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="sortByCreatedByDirection" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByUpdatedAtLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByUpdatedAtDirection" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByUpdatedByLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByUpdatedByDirection" type="java.lang.String"*/-->
     <div layout:fragment="content">
         <div class="d-flex flex-wrap mb-4">
-            <h1 class="flex-grow-1">Credentials</h1>
+            <h1 class="flex-grow-1">API Keys</h1>
             <div>
                 <a class="btn btn-primary ms-2"
-                   th:href="@{/credentials/add}"><i class="bi-plus-circle"></i> Add</a>
+                   th:href="@{/apiKeys/add}"><i class="bi-plus-circle"></i> Add</a>
             </div>
         </div>
 
@@ -37,9 +37,9 @@
             </div>
             <div class="card-body">
                 <div class="card-text">
-                    <form id="searchForm" th:action="@{/credentials}" th:object="${credentialSearch}" method="get">
+                    <form id="searchForm" th:action="@{/apiKeys}" th:object="${apiKeySearch}" method="get">
                         <div class="row mb-3">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <label for="cboApplication" class="form-label">Application</label>
                                 <select id="cboApplication"
                                         class="form-select"
@@ -57,33 +57,13 @@
                                     <option th:each="optionValue : ${environmentValues}" th:value="${optionValue}">[[${optionValue}]]</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label for="cboCredentialType" class="form-label">Type</label>
-                                <select id="cboCredentialType"
-                                        class="form-select"
-                                        th:field="*{credentialType}">
-                                    <option value="">Please select</option>
-                                    <option th:each="optionValue : ${credentialTypeValues}" th:value="${optionValue}">[[${optionValue}]]</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-5">
-                                <label for="txtName" class="form-label">Username</label>
-                                <input type="text" id="txtName" th:field="*{username}" class="form-control" />
+                            <div class="col-md-3">
+                                <label for="txtServer" class="form-label">Server</label>
+                                <input type="text" id="txtServer" th:field="*{server}" class="form-control" />
                             </div>
                             <div class="col-md-3">
-                                <label for="cboEnabled" class="form-label">Show Deleted?</label>
-                                <select id="cboEnabled"
-                                        class="form-select"
-                                        th:field="*{enabled}">
-                                    <option value="true">No</option>
-                                    <option value="false">Yes</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="txtCreatedBy" class="form-label">Created By</label>
-                                <input type="text" id="txtCreatedBy" th:field="*{createdBy}" class="form-control" />
+                                <label for="txtUpdatedBy" class="form-label">Updated By</label>
+                                <input type="text" id="txtUpdatedBy" th:field="*{updatedBy}" class="form-control" />
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -103,45 +83,39 @@
                 Results
             </div>
             <div class="card-body">
-                <p class="card-text" th:if="${#lists.isEmpty(credentials)}">No records were found</p>
-                <div th:if="${not #lists.isEmpty(credentials)}" class="table-responsive">
+                <p class="card-text" th:if="${#lists.isEmpty(apiKeys)}">No records were found</p>
+                <div th:if="${not #lists.isEmpty(apiKeys)}" class="table-responsive">
                     <table class="table table-sm table-striped table-hover align-middle">
                         <thead>
                         <tr>
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Id', ${sortByIdLink}, ${sortByIdDirection}, 'id')}"></th>
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Application', ${sortByApplicationLink}, ${sortByApplicationDirection}, 'application')}"></th>
                             <th>Env</th>
-                            <th>Type</th>
-                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Username', ${sortByUsernameLink}, ${sortByUsernameDirection}, 'username')}"></th>
-                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Version', ${sortByVersionLink}, ${sortByVersionDirection}, 'version')}"></th>
-                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Last Update', ${sortByCreatedAtLink}, ${sortByCreatedAtDirection}, 'createdAt')}"></th>
-                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Updated By', ${sortByCreatedByLink}, ${sortByCreatedByDirection}, 'createdBy')}"></th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Server', ${sortByServerLink}, ${sortByServerDirection}, 'server')}"></th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Create Date', ${sortByCreatedAtLink}, ${sortByCreatedAtDirection}, 'createdAt')}"></th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Last Update', ${sortByUpdatedAtLink}, ${sortByUpdatedAtDirection}, 'createdAt')}"></th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Updated By', ${sortByUpdatedByLink}, ${sortByUpdatedByDirection}, 'updatedBy')}"></th>
                             <th><!-- --></th>
                         </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                        <tr th:each="credential : ${credentials}">
-                            <td>[[${credential.id}]]</td>
-                            <td>[[${credential.application}]]</td>
-                            <td>[[${credential.environment}]]</td>
-                            <td>[[${credential.credentialType}]]</td>
-                            <td>[[${credential.username}]]</td>
-                            <td>[[${credential.version}]]</td>
-                            <td>[[${#temporals.format(credential.createdAt, 'dd-MMM-yyyy HH:mm:ss')}]]</td>
-                            <td>[[${credential.createdBy}]]</td>
+                        <tr th:each="apiKey : ${apiKeys}">
+                            <td>[[${apiKey.id}]]</td>
+                            <td>[[${apiKey.application}]]</td>
+                            <td>[[${apiKey.environment}]]</td>
+                            <td>[[${apiKey.server}]]</td>
+                            <td>[[${#temporals.format(apiKey.createdAt, 'dd-MMM-yyyy HH:mm:ss')}]]</td>
+                            <td>[[${#temporals.format(apiKey.updatedAt, 'dd-MMM-yyyy HH:mm:ss')}]]</td>
+                            <td>[[${apiKey.updatedBy}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/credentials/history/{id}(id=${credential.id})}"
-                                       th:if="${credential.version() != 1}"
-                                       class="btn btn-sm btn-secondary bi-clock"
-                                       title="History"></a>
-                                    <a th:href="@{/credentials/view/{id}(id=${credential.id})}"
+                                    <a th:href="@{/apiKeys/view/{id}(id=${apiKey.id})}"
                                        class="btn btn-sm btn-secondary bi-eye"
                                        title="View"></a>
-                                    <a th:href="@{/credentials/edit/{id}(id=${credential.id})}"
+                                    <a th:href="@{/apiKeys/edit/{id}(id=${apiKey.id})}"
                                        class="btn btn-sm btn-secondary bi-pencil-square"
                                        title="Edit"></a>
-                                    <form th:action="@{/credentials/delete/{id}(id=${credential.id})}"
+                                    <form th:action="@{/apiKeys/delete/{id}(id=${apiKey.id})}"
                                           th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-secondary bi-trash" title="Delete">
                                         </button>

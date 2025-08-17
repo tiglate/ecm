@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{layout}">
+<head>
+    <title>View API Key</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div th:replace="~{fragments/header :: header('view', 'View API Key', 'apiKeyForm', @{/apiKeys})}"></div>
+        <th:block th:replace="~{apiKey/_form :: apiKeyForm('view', ${apiKey})}"></th:block>
+    </div>
+</body>
+</html>

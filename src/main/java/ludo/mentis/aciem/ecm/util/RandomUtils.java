@@ -12,4 +12,6 @@ public interface RandomUtils {
     boolean pickRandomBoolean();
 
     LocalDate getRandomDate(LocalDate start, LocalDate end);
+
+    int getRandomNumberInRange(int origin, int bound);
 }

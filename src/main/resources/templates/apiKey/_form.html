@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>API Key Form</title>
+</head>
+<body>
+    <!--/*@thymesVar id="apiKey" type="ludo.mentis.aciem.ecm.model.ApiKeyDTO"*/-->
+    <!--/*@thymesVar id="applicationValues" type="java.util.Map"*/-->
+    <!--/*@thymesVar id="environmentValues" type="java.util.Map"*/-->
+    <!--/*@thymesVar id="mode" type="java.lang.String"*/-->
+
+    <th:block th:fragment="apiKeyForm(mode, apiKey)" th:object="${apiKey}">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                Details
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-md-5">
+                        <label for="cboApplication" class="form-label">Application*</label>
+                        <select id="cboApplication"
+                                class="form-select"
+                                th:field="*{applicationId}"
+                                th:disabled="${mode == 'view'}"
+                                th:classappend="${#fields.hasErrors('applicationId') ? 'is-invalid' : ''}">
+                            <option value="">Please select</option>
+                            <option th:each="optionValue : ${applicationValues}" th:value="${optionValue.key}">[[${optionValue.value}]]</option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('applicationId')}" class="invalid-feedback d-block">
+                            <p th:each="error : ${#fields.errors('applicationId')}" class="mb-0">[[${error}]]</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cboEnvironment" class="form-label">Environment*</label>
+                        <select id="cboEnvironment"
+                                class="form-select"
+                                th:field="*{environment}"
+                                th:disabled="${mode == 'view'}"
+                                th:classappend="${#fields.hasErrors('environment') ? 'is-invalid' : ''}">
+                            <option value="">Please select</option>
+                            <option th:each="optionValue : ${environmentValues}" th:value="${optionValue}">[[${optionValue}]]</option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('environment')}" class="invalid-feedback d-block">
+                            <p th:each="error : ${#fields.errors('environment')}" class="mb-0">[[${error}]]</p>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label for="txtServer" class="form-label">Server</label>
+                        <input type="text"
+                               id="txtServer"
+                               class="form-control"
+                               th:field="*{server}"
+                               th:readonly="${mode == 'edit'}"
+                               th:disabled="${mode == 'view'}"
+                               th:classappend="${#fields.hasErrors('server') ? 'is-invalid' : ''}" />
+                        <div th:if="${#fields.hasErrors('server')}" class="invalid-feedback d-block">
+                            <p th:each="error : ${#fields.errors('server')}" class="mb-0">[[${error}]]</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col">
+                        <label for="txtSecret" class="form-label">Secret (API KEY)*</label>
+                        <input type="text"
+                               id="txtSecret"
+                               class="form-control"
+                               th:field="*{secret}"
+                               th:disabled="${mode == 'view'}"
+                               th:classappend="${#fields.hasErrors('secret') ? 'is-invalid' : ''}" />
+                        <div th:if="${#fields.hasErrors('secret')}" class="invalid-feedback d-block">
+                            <p th:each="error : ${#fields.errors('secret')}" class="mb-0">[[${error}]]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3" th:if="${mode != 'add'}">
+            <div class="card-header">
+                Audit
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="txtId" class="form-label">Id</label>
+                        <input type="number" id="txtId" th:field="*{id}" disabled="disabled" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="txtCreatedAt" class="form-label">Create Date</label>
+                        <input type="text" id="txtCreatedAt" disabled="disabled" class="form-control" th:value="${#temporals.format(apiKey.createdAt, 'dd-MMM-yyyy HH:mm:ss')}" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="txtUpdatedAt" class="form-label">Last Update</label>
+                        <input type="text" id="txtUpdatedAt" disabled="disabled" class="form-control" th:value="${#temporals.format(apiKey.updatedAt, 'dd-MMM-yyyy HH:mm:ss')}" />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txtUpdatedBy" class="form-label">Updated By</label>
+                        <input type="text" id="txtUpdatedBy" th:field="*{updatedBy}" disabled="disabled" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

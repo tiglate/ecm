@@ -1,15 +1,11 @@
 package ludo.mentis.aciem.ecm.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
-import org.thymeleaf.TemplateEngine;
-
-import java.util.Objects;
 
 
 @Component
@@ -24,7 +20,10 @@ public class WebUtils {
     }
 
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        var attributes = RequestContextHolder.getRequestAttributes();
+        return !(attributes instanceof ServletRequestAttributes)
+                ? null
+                : ((ServletRequestAttributes) attributes).getRequest();
     }
 
     public static String getMessage(final String code, final Object... args) {

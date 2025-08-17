@@ -4,6 +4,7 @@ DROP TABLE tb_credential_type;
 DROP TABLE tb_application;
 DROP TABLE tb_environment;
 DROP TABLE tb_cipher_envelope;
+DROP TABLE tb_api_key;
 */
 
 -- -----------------------------------------------------
@@ -110,8 +111,46 @@ CREATE INDEX `fk_credential_environment_idx` ON `tb_credential` (`id_environment
 
 CREATE INDEX `fk_credential_application_idx` ON `tb_credential` (`id_application` ASC) VISIBLE;
 
-CREATE UNIQUE INDEX `uq_credential` ON `tb_credential` (`id_environment` ASC, `id_application` ASC, `id_credential_type` ASC, `username` ASC, `version` ASC, `enabled` ASC) VISIBLE;
+CREATE UNIQUE INDEX `uq_credential_idx` ON `tb_credential` (`id_environment` ASC, `id_application` ASC, `id_credential_type` ASC, `username` ASC, `version` ASC, `enabled` ASC) VISIBLE;
 
 CREATE INDEX `fk_credential_credential_type_idx` ON `tb_credential` (`id_credential_type` ASC) VISIBLE;
 
-CREATE INDEX `fk_credential_self` ON `tb_credential` (`id_credential_next` ASC) VISIBLE;
+CREATE INDEX `fk_credential_self_idx` ON `tb_credential` (`id_credential_next` ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table `tb_api_key`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tb_api_key` (
+  `id_api_key` BIGINT NOT NULL AUTO_INCREMENT,
+  `id_environment` BIGINT NOT NULL,
+  `id_application` BIGINT NOT NULL,
+  `id_cipher_envelope` BIGINT NOT NULL,
+  `server` VARCHAR(45) NULL,
+  `created_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_by` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_api_key`),
+  CONSTRAINT `fk_api_key_application`
+    FOREIGN KEY (`id_application`)
+    REFERENCES `tb_application` (`id_application`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_api_key_environment`
+    FOREIGN KEY (`id_environment`)
+    REFERENCES `tb_environment` (`id_environment`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_api_key_cipher_envelope`
+    FOREIGN KEY (`id_cipher_envelope`)
+    REFERENCES `tb_cipher_envelope` (`id_cipher_envelope`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_api_key_application_idx` ON `tb_api_key` (`id_application` ASC) INVISIBLE;
+
+CREATE INDEX `fk_api_key_environment_idx` ON `tb_api_key` (`id_environment` ASC) INVISIBLE;
+
+CREATE INDEX `fk_api_key_cipher_envelope_idx` ON `tb_api_key` (`id_cipher_envelope` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `uq_api_key_idx` ON `tb_api_key` (`id_environment` ASC, `id_application` ASC) VISIBLE;
