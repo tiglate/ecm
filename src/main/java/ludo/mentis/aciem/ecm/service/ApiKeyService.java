@@ -17,4 +17,6 @@ public interface ApiKeyService {
     void update(Long id, ApiKeyDTO apiKeyDTO);
 
     void delete(Long id);
+
+    boolean clientIdExists(String clientId);
 }

@@ -14,6 +14,8 @@
     <!--/*@thymesVar id="sortByIdDirection" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByApplicationLink" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByApplicationDirection" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByClientIdLink" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="sortByClientIdDirection" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByServerLink" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByServerDirection" type="java.lang.String"*/-->
     <!--/*@thymesVar id="sortByCreatedAtLink" type="java.lang.String"*/-->
@@ -57,11 +59,15 @@
                                     <option th:each="optionValue : ${environmentValues}" th:value="${optionValue}">[[${optionValue}]]</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
+                                <label for="txtClientId" class="form-label">ClientId</label>
+                                <input type="text" id="txtClientId" th:field="*{clientId}" class="form-control" />
+                            </div>
+                            <div class="col-md-2">
                                 <label for="txtServer" class="form-label">Server</label>
                                 <input type="text" id="txtServer" th:field="*{server}" class="form-control" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="txtUpdatedBy" class="form-label">Updated By</label>
                                 <input type="text" id="txtUpdatedBy" th:field="*{updatedBy}" class="form-control" />
                             </div>
@@ -91,6 +97,7 @@
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Id', ${sortByIdLink}, ${sortByIdDirection}, 'id')}"></th>
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Application', ${sortByApplicationLink}, ${sortByApplicationDirection}, 'application')}"></th>
                             <th>Env</th>
+                            <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Client Id', ${sortByClientIdLink}, ${sortByClientIdDirection}, 'clientId')}"></th>
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Server', ${sortByServerLink}, ${sortByServerDirection}, 'server')}"></th>
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Create Date', ${sortByCreatedAtLink}, ${sortByCreatedAtDirection}, 'createdAt')}"></th>
                             <th th:replace="~{fragments/table-utils :: sortableColumnHeader('Last Update', ${sortByUpdatedAtLink}, ${sortByUpdatedAtDirection}, 'createdAt')}"></th>
@@ -103,6 +110,7 @@
                             <td>[[${apiKey.id}]]</td>
                             <td>[[${apiKey.application}]]</td>
                             <td>[[${apiKey.environment}]]</td>
+                            <td>[[${apiKey.clientId}]]</td>
                             <td>[[${apiKey.server}]]</td>
                             <td>[[${#temporals.format(apiKey.createdAt, 'dd-MMM-yyyy HH:mm:ss')}]]</td>
                             <td>[[${#temporals.format(apiKey.updatedAt, 'dd-MMM-yyyy HH:mm:ss')}]]</td>

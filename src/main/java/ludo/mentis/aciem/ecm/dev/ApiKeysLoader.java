@@ -5,6 +5,7 @@ import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.repos.ApiKeyRepository;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.PasswordService;
+import ludo.mentis.aciem.ecm.util.ApiKeyUtils;
 import ludo.mentis.aciem.ecm.util.RandomUtils;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ public class ApiKeysLoader implements DataLoaderCommand {
     private final BusinessAppRepository applicationRepository;
     private final RandomUtils randomUtils;
     private final PasswordService passwordService;
+    private final ApiKeyUtils apiKeyUtils;
 
     protected static final String[] SCI_FI_SERVER_NAMES = {
             "DEV_VULCAN_CORE",
@@ -54,11 +56,13 @@ public class ApiKeysLoader implements DataLoaderCommand {
     public ApiKeysLoader(final ApiKeyRepository apiKeyRepository,
                          final BusinessAppRepository applicationRepository,
                          final RandomUtils randomUtils,
-                         final PasswordService passwordService) {
+                         final PasswordService passwordService,
+                         final ApiKeyUtils apiKeyUtils) {
         this.apiKeyRepository = apiKeyRepository;
         this.applicationRepository = applicationRepository;
         this.randomUtils = randomUtils;
         this.passwordService = passwordService;
+        this.apiKeyUtils = apiKeyUtils;
     }
 
     @Override
@@ -103,10 +107,11 @@ public class ApiKeysLoader implements DataLoaderCommand {
                 var apiKey = new ApiKey();
                 apiKey.setApplication(app);
 
-                var password = faker.internet().password();
-                var envelop = passwordService.encryptPasswordToEntity(password);
+                var secret = apiKeyUtils.generateApiKey();
+                var envelop = passwordService.encryptPasswordToEntity(secret);
                 apiKey.setCipherEnvelope(envelop);
 
+                apiKey.setClientId(faker.internet().uuid());
                 apiKey.setEnvironment(environment);
                 apiKey.setServer(getRandomServerName(environment));
 

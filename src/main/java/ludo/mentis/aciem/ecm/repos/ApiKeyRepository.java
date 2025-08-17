@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
 
     @Query("SELECT new ludo.mentis.aciem.ecm.model.ApiKeySearchDTO(" +
@@ -22,6 +24,7 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
             "   WHEN d.environmentId = 4 THEN 'PROD' " +
             "   ELSE 'UNKNOWN' " +
             " END, " +
+            " d.clientId, " +
             " d.server, " +
             " d.createdAt, " +
             " d.updatedAt, " +
@@ -30,14 +33,20 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
             "WHERE (:applicationId IS NULL OR d.application.id = :applicationId) " +
             "  AND (:environmentId IS NULL OR d.environmentId  = :environmentId) " +
             "  AND (:updatedBy     IS NULL OR d.updatedBy      LIKE %:updatedBy%) " +
+            "  AND (:clientId      IS NULL OR d.clientId       LIKE %:clientId%) " +
             "  AND (:server        IS NULL OR d.server         LIKE %:server%) ")
     Page<ApiKeySearchDTO> findAllBySearchCriteria(
             @Param("applicationId") Long applicationId,
             @Param("environmentId") Long environmentId,
             @Param("updatedBy") String updatedBy,
+            @Param("clientId") String clientId,
             @Param("server") String server,
             Pageable pageable
     );
 
     boolean existsByApplicationIdAndEnvironmentId(Long applicationId, Long environmentId);
+
+    Optional<ApiKey> findByClientId(String clientId);
+
+    boolean existsByClientId(String clientId);
 }

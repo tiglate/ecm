@@ -66,6 +66,7 @@ public class ApiKeyController {
         final var sortOrder = this.sortUtils.addSortAttributesToModel(model, sort, pageable, Map.ofEntries(
                 entry("id", "sortById"),
                 entry("application", "sortByApplication"),
+                entry("clientId", "sortByClientId"),
                 entry("server", "sortByServer"),
                 entry("createdAt", "sortByCreatedAt"),
                 entry("UpdatedAt", "sortByUpdatedAt"),

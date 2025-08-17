@@ -7,6 +7,7 @@ import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.repos.ApiKeyRepository;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.PasswordService;
+import ludo.mentis.aciem.ecm.util.ApiKeyUtils;
 import ludo.mentis.aciem.ecm.util.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,11 +32,14 @@ class ApiKeysLoaderTest {
     private RandomUtils randomUtils;
     @Mock
     private PasswordService passwordService;
+    @Mock
+    private ApiKeyUtils apiKeyUtils;
 
     @Test
     @DisplayName("order and name are correct")
     void metadata() {
-        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService);
+        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService,
+                apiKeyUtils);
         assertEquals(2, loader.getOrder());
         assertEquals("API Keys", loader.getName());
     }
@@ -44,7 +48,8 @@ class ApiKeysLoaderTest {
     @DisplayName("canItRun returns true only when repository is empty")
     void canItRun() {
         when(apiKeyRepository.count()).thenReturn(0L);
-        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService);
+        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService,
+                apiKeyUtils);
         assertTrue(loader.canItRun());
 
         when(apiKeyRepository.count()).thenReturn(1L);
@@ -55,7 +60,8 @@ class ApiKeysLoaderTest {
     @DisplayName("run() returns 0 and does not save when there are no applications")
     void run_noApplications_returnsZero() {
         when(businessAppRepository.findAll()).thenReturn(List.of());
-        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService);
+        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService,
+                apiKeyUtils);
         var count = loader.run();
         assertEquals(0, count);
         verify(apiKeyRepository, never()).save(any(ApiKey.class));
@@ -78,7 +84,8 @@ class ApiKeysLoaderTest {
         var envelope = new CipherEnvelopeEntity();
         when(passwordService.encryptPasswordToEntity(anyString())).thenReturn(envelope);
 
-        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService);
+        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService,
+                apiKeyUtils);
 
         ArgumentCaptor<ApiKey> captor = ArgumentCaptor.forClass(ApiKey.class);
         var count = loader.run();
@@ -106,7 +113,8 @@ class ApiKeysLoaderTest {
 
         when(apiKeyRepository.existsByApplicationIdAndEnvironmentId(anyLong(), anyLong())).thenReturn(true);
 
-        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService);
+        var loader = new ApiKeysLoader(apiKeyRepository, businessAppRepository, randomUtils, passwordService,
+                apiKeyUtils);
         var count = loader.run();
 
         assertEquals(0, count);

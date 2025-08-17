@@ -8,6 +8,7 @@ public record ApiKeySearchDTO(
         String application,
         Long environmentId,
         String environment,
+        String clientId,
         String server,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,

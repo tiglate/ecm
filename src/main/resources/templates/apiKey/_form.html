@@ -50,7 +50,6 @@
                                id="txtServer"
                                class="form-control"
                                th:field="*{server}"
-                               th:readonly="${mode == 'edit'}"
                                th:disabled="${mode == 'view'}"
                                th:classappend="${#fields.hasErrors('server') ? 'is-invalid' : ''}" />
                         <div th:if="${#fields.hasErrors('server')}" class="invalid-feedback d-block">
@@ -59,7 +58,19 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col">
+                    <div class="col-5">
+                        <label for="txtClientId" class="form-label">Client Id*</label>
+                        <input type="text"
+                               id="txtClientId"
+                               class="form-control"
+                               th:field="*{clientId}"
+                               th:disabled="${mode == 'view'}"
+                               th:classappend="${#fields.hasErrors('clientId') ? 'is-invalid' : ''}" />
+                        <div th:if="${#fields.hasErrors('clientId')}" class="invalid-feedback d-block">
+                            <p th:each="error : ${#fields.errors('clientId')}" class="mb-0">[[${error}]]</p>
+                        </div>
+                    </div>
+                    <div class="col-7">
                         <label for="txtSecret" class="form-label">Secret (API KEY)*</label>
                         <input type="text"
                                id="txtSecret"

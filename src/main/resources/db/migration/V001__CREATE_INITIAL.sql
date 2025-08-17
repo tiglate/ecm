@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `tb_api_key` (
   `id_environment` BIGINT NOT NULL,
   `id_application` BIGINT NOT NULL,
   `id_cipher_envelope` BIGINT NOT NULL,
+  `client_id` VARCHAR(45) NOT NULL,
   `server` VARCHAR(45) NULL,
   `created_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -154,3 +155,5 @@ CREATE INDEX `fk_api_key_environment_idx` ON `tb_api_key` (`id_environment` ASC)
 CREATE INDEX `fk_api_key_cipher_envelope_idx` ON `tb_api_key` (`id_cipher_envelope` ASC) VISIBLE;
 
 CREATE UNIQUE INDEX `uq_api_key_idx` ON `tb_api_key` (`id_environment` ASC, `id_application` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `uq_api_key_client_id_idx` ON `tb_api_key` (`client_id` ASC) VISIBLE;

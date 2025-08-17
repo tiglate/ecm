@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import ludo.mentis.aciem.ecm.validation.ApiKeyAppEnvironmentUnique;
+import ludo.mentis.aciem.ecm.validation.ApiKeyClientIdUnique;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,11 @@ public class ApiKeyDTO {
 
     @NotNull
     private Long applicationId;
+
+    @Size(max = 45)
+    @NotBlank
+    @ApiKeyClientIdUnique
+    private String clientId;
 
     @Size(max = 45)
     private String server;
@@ -53,6 +59,14 @@ public class ApiKeyDTO {
 
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getServer() {

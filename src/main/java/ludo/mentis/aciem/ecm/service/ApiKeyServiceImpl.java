@@ -31,12 +31,14 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     public Page<ApiKeySearchDTO> findAll(ApiKeyDTO searchDTO, Pageable pageable) {
         Long applicationId = searchDTO.getApplicationId();
         Long environmentId = (searchDTO.getEnvironment() != null) ? searchDTO.getEnvironment().getId() : null;
+        String clientId = searchDTO.getClientId();
         String server = searchDTO.getServer();
         String updatedBy = searchDTO.getUpdatedBy();
         return apiKeyRepository.findAllBySearchCriteria(
                 applicationId,
                 environmentId,
                 updatedBy,
+                clientId,
                 server,
                 pageable
         );
@@ -68,10 +70,16 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         apiKeyRepository.deleteById(id);
     }
 
+    @Override
+    public boolean clientIdExists(String clientId) {
+        return apiKeyRepository.existsByClientId(clientId);
+    }
+
     private ApiKeyDTO mapToDTO(final ApiKey apiKey, final ApiKeyDTO apiKeyDTO) {
         apiKeyDTO.setId(apiKey.getId());
         apiKeyDTO.setEnvironment(apiKey.getEnvironment());
         apiKeyDTO.setApplicationId(apiKey.getApplication().getId());
+        apiKeyDTO.setClientId(apiKey.getClientId());
         apiKeyDTO.setServer(apiKey.getServer());
         apiKeyDTO.setCreatedAt(apiKey.getCreatedAt());
         apiKeyDTO.setUpdatedAt(apiKey.getUpdatedAt());
@@ -93,6 +101,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     private ApiKey mapToEntity(final ApiKeyDTO apiKeyDTO, final ApiKey apiKey) {
         apiKey.setEnvironment(apiKeyDTO.getEnvironment());
         apiKey.setServer(apiKeyDTO.getServer());
+        apiKey.setClientId(apiKeyDTO.getClientId());
         apiKey.setCreatedAt(apiKeyDTO.getCreatedAt());
         apiKey.setUpdatedAt(apiKeyDTO.getUpdatedAt());
         apiKey.setUpdatedBy(apiKeyDTO.getUpdatedBy());

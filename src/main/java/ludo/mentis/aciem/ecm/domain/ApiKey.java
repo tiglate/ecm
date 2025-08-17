@@ -31,6 +31,9 @@ public class ApiKey {
     @JoinColumn(name = "id_application", nullable = false)
     private BusinessApp application;
 
+    @Column(nullable = false, length = 45, unique = true)
+    private String clientId;
+
     @Column(nullable = false, length = 45)
     private String server;
 
@@ -94,6 +97,14 @@ public class ApiKey {
 
     public void setApplication(BusinessApp application) {
         this.application = application;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getServer() {
