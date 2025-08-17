@@ -3,6 +3,7 @@ package ludo.mentis.aciem.ecm.repos;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.model.CredentialSearchDTO;
+import ludo.mentis.aciem.ecm.model.PasswordRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -58,6 +59,15 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
             @Param("username") String username,
             Pageable pageable
     );
+
+
+    @Query("SELECT c FROM Credential c " +
+            "WHERE c.nextCredential IS NULL " +
+            "  AND c.application.code = :#{#passwordRequest.appCode} " +
+            "  AND c.environmentId = :#{#passwordRequest.environment.id} " +
+            "  AND c.credentialTypeId = :#{#passwordRequest.credentialType.id} " +
+            "  AND c.username = :#{#passwordRequest.username}")
+    Optional<Credential> findFirstByPasswordRequest(@Param("passwordRequest") PasswordRequest passwordRequest);
 
     Credential findFirstByApplication(BusinessApp application);
 

@@ -38,6 +38,7 @@ bin/
 logs/
 *.log
 *.tmp
+*.bak
 tmp/
 hs_err_pid*
 replay_pid*

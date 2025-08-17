@@ -22,4 +22,6 @@ public interface BusinessAppRepository extends JpaRepository<BusinessApp, Long> 
     );
 
     boolean existsByNameIgnoreCase(String name);
+
+    boolean existsByCodeIgnoreCase(String code);
 }

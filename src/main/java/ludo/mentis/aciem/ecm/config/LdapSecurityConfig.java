@@ -52,7 +52,9 @@ public class LdapSecurityConfig {
                                         "/webjars/**",
                                         "/oauth/**",
                                         "/actuator/**",
-                                        "/favicon.ico").permitAll()
+                                        "/favicon.ico",
+                                        "/api/**",
+                                        "/error/**").permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
