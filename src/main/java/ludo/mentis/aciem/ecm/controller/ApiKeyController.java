@@ -7,15 +7,13 @@ import ludo.mentis.aciem.ecm.model.ApiKeyDTO;
 import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.ApiKeyService;
-import ludo.mentis.aciem.ecm.util.CustomCollectors;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
-import ludo.mentis.aciem.ecm.util.PaginationUtils;
-import ludo.mentis.aciem.ecm.util.SortUtils;
+import ludo.mentis.aciem.ecm.util.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +26,7 @@ import static java.util.Map.entry;
 
 @Controller
 @RequestMapping("/apiKeys")
+@PreAuthorize("hasAuthority('" + UserRoles.ADMIN + "')")
 public class ApiKeyController {
 
     private static final String ENTITY_NAME = "ApiKey";

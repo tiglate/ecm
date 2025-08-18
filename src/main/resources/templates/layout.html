@@ -19,7 +19,7 @@
     <header id="main-header" data-bs-theme="dark">
         <div class="container">
             <nav class="navbar navbar-expand-md">
-                <a th:href="@{/}" class="navbar-brand">
+                <a th:href="@{/}" class="navbar-brand" hx-preserve>
                     <img th:src="@{/static/images/logo.svg}" alt="ECM" width="30" height="30" class="d-inline-block align-top" style="filter: invert(100%);">
                     <span class="ps-1">Enterprise Credentials Manager</span>
                 </a>
@@ -36,9 +36,15 @@
                             <button type="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="navbarEntitiesLink"
                                     aria-expanded="false">Entities</button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
-                                <li><a th:href="@{/applications}" class="dropdown-item">Applications</a></li>
-                                <li><a th:href="@{/credentials}" class="dropdown-item">Credentials</a></li>
-                                <li><a th:href="@{/apiKeys}" class="dropdown-item">API Keys</a></li>
+                                <li><a th:href="@{/applications}"
+                                       sec:authorize="hasAnyRole('ROLE_ECM_ADMIN')"
+                                       class="dropdown-item">Applications</a></li>
+                                <li><a th:href="@{/credentials}"
+                                       sec:authorize="hasAnyRole('ROLE_ECM_ADMIN', 'ROLE_ECM_DEVELOPER')"
+                                       class="dropdown-item">Credentials</a></li>
+                                <li><a th:href="@{/apiKeys}"
+                                       sec:authorize="hasAnyRole('ROLE_ECM_ADMIN')"
+                                       class="dropdown-item">API Keys</a></li>
                             </ul>
                         </li>
                         <li class="navbar-item">

@@ -5,15 +5,13 @@ import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.model.*;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.CredentialService;
-import ludo.mentis.aciem.ecm.util.CustomCollectors;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
-import ludo.mentis.aciem.ecm.util.PaginationUtils;
-import ludo.mentis.aciem.ecm.util.SortUtils;
+import ludo.mentis.aciem.ecm.util.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,6 +54,7 @@ public class CredentialController {
                 .collect(CustomCollectors.toSortedMap(BusinessApp::getId, BusinessApp::getName)));
     }
 
+    @PreAuthorize("hasAnyAuthority('" + UserRoles.ADMIN + "', '" + UserRoles.DEVELOPER + "')")
     @GetMapping
     public String list(@ModelAttribute("credentialSearch") CredentialDTO filter,
                        @RequestParam(required = false) String sort,
@@ -83,12 +82,14 @@ public class CredentialController {
         return CONTROLLER_LIST;
     }
 
+    @PreAuthorize("hasAnyAuthority('" + UserRoles.ADMIN + "', '" + UserRoles.DEVELOPER + "')")
     @GetMapping("/view/{id}")
     public String view(@PathVariable final Long id, final Model model) {
         model.addAttribute("credential", credentialService.get(id));
         return CONTROLLER_VIEW;
     }
 
+    @PreAuthorize("hasAnyAuthority('" + UserRoles.ADMIN + "', '" + UserRoles.DEVELOPER + "')")
     @GetMapping("/history/{id}")
     public String history(@PathVariable final Long id, final Model model) {
         var credentials = credentialService.findHistory(id);
@@ -96,6 +97,7 @@ public class CredentialController {
         return CONTROLLER_HISTORY;
     }
 
+    @PreAuthorize("hasAuthority('" + UserRoles.ADMIN + "')")
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable final Long id, final Model model, final RedirectAttributes redirectAttributes) {
         var credential = credentialService.get(id);
@@ -107,11 +109,13 @@ public class CredentialController {
         return CONTROLLER_EDIT;
     }
 
+    @PreAuthorize("hasAuthority('" + UserRoles.ADMIN + "')")
     @GetMapping("/add")
     public String add(@ModelAttribute("credential") final CredentialDTO credentialDTO) {
         return CONTROLLER_ADD;
     }
 
+    @PreAuthorize("hasAuthority('" + UserRoles.ADMIN + "')")
     @PostMapping("/add")
     public String add(@ModelAttribute("credential") @Validated(OnCreate.class) final CredentialDTO credentialDTO,
                       final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
@@ -123,6 +127,7 @@ public class CredentialController {
         return REDIRECT_TO_CONTROLLER_INDEX;
     }
 
+    @PreAuthorize("hasAuthority('" + UserRoles.ADMIN + "')")
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable final Long id,
                        @ModelAttribute("credential") @Validated(OnUpdate.class) final CredentialDTO credentialDTO,
@@ -135,6 +140,7 @@ public class CredentialController {
         return REDIRECT_TO_CONTROLLER_INDEX;
     }
 
+    @PreAuthorize("hasAuthority('" + UserRoles.ADMIN + "')")
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable final Long id,
                          final RedirectAttributes redirectAttributes) {

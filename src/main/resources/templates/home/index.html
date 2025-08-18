@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout}">
 <head>
     <title>Home</title>
@@ -10,10 +11,29 @@
 <div layout:fragment="content">
     <div class="col-md-4 mb-5">
         <div class="list-group">
-            <a th:href="@{/applications}" class="list-group-item list-group-item-action">Applications</a>
-            <a th:href="@{/credentials}" class="list-group-item list-group-item-action">Credentials</a>
-            <a th:href="@{/apiKeys}" class="list-group-item list-group-item-action">API Keys</a>
+            <a th:href="@{/applications}"
+               sec:authorize="hasAnyRole('ROLE_ECM_ADMIN')"
+               class="list-group-item list-group-item-action">Applications</a>
+            <a th:href="@{/credentials}"
+               sec:authorize="hasAnyRole('ROLE_ECM_ADMIN', 'ROLE_ECM_DEVELOPER')"
+               class="list-group-item list-group-item-action">Credentials</a>
+            <a th:href="@{/apiKeys}"
+               sec:authorize="hasAnyRole('ROLE_ECM_ADMIN')"
+               class="list-group-item list-group-item-action">API Keys</a>
         </div>
+    </div>
+
+    <!-- Bottom section showing logged-in user's authorities/roles -->
+    <div class="mt-5">
+        <h5>Your authorities</h5>
+        <div th:if="${#lists.isEmpty(authorities)}">
+            <span class="text-muted">No authorities found.</span>
+        </div>
+        <ul th:if="${!#lists.isEmpty(authorities)}" class="list-unstyled">
+            <li th:each="auth : ${authorities}">
+                <span class="badge bg-secondary" th:text="${auth}">ROLE_SAMPLE</span>
+            </li>
+        </ul>
     </div>
 </div>
 </body>
