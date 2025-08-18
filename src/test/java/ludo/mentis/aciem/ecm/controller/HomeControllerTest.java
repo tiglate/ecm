@@ -6,9 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
@@ -16,8 +15,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class HomeControllerTest {
 
@@ -29,37 +27,54 @@ class HomeControllerTest {
     @Mock
     private SecurityContext securityContext;
 
+    @Mock
+    private Authentication authentication;
+
     AutoCloseable mocks;
 
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
         controller = new HomeController();
-        SecurityContextHolder.setContext(securityContext);
     }
 
     @AfterEach
     void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
-        mocks.close();
+        if (mocks != null) mocks.close();
     }
 
     @Test
-    void index_shouldReturnViewAndIncludeSortedAuthorities() {
-        Authentication auth = new UsernamePasswordAuthenticationToken("user", "pass",
-                List.of(new SimpleGrantedAuthority("ROLE_Z"), new SimpleGrantedAuthority("ROLE_A")));
-        when(securityContext.getAuthentication()).thenReturn(auth);
+    void index_withLogoutSuccessTrue_shouldAddInfoMessageAndAuthorities() {
+        // Arrange authentication with two authorities out of order
+        GrantedAuthority a = () -> "ROLE_Z";
+        GrantedAuthority b = () -> "ROLE_A";
+        org.springframework.security.core.Authentication auth =
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        "user", "pass", List.of(a, b));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // Act
+        String view = controller.index(true, model);
+
+        // Assert
+        assertThat(view).isEqualTo("home/index");
+        verify(model).addAttribute(FlashMessages.MSG_INFO, "Your logout was successful.");
+        // Verify sorted authorities added to model
+        verify(model).addAttribute(eq("authorities"), eq(List.of("ROLE_A", "ROLE_Z")));
+    }
+
+    @Test
+    void index_withoutAuthentication_shouldAddEmptyAuthoritiesAndNoInfoMessage() {
+        // No authentication in context
+        SecurityContextHolder.clearContext();
 
         String view = controller.index(null, model);
 
         assertThat(view).isEqualTo("home/index");
-        verify(model).addAttribute("authorities", List.of("ROLE_A", "ROLE_Z"));
-    }
-
-    @Test
-    void index_withLogoutSuccessTrue_shouldAddInfoMessage() {
-        when(securityContext.getAuthentication()).thenReturn(null);
-        controller.index(true, model);
-        verify(model).addAttribute(FlashMessages.MSG_INFO, "Your logout was successful.");
+        // Should add empty authorities
+        verify(model).addAttribute(eq("authorities"), eq(List.of()));
+        // Should not add info message
+        verify(model, never()).addAttribute(eq(FlashMessages.MSG_INFO), any());
     }
 }
