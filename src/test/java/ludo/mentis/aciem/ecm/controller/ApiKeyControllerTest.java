@@ -68,8 +68,8 @@ class ApiKeyControllerTest {
         String view = controller.list(filter, null, pageable, model);
 
         assertThat(view).isEqualTo("apiKey/list");
-        verify(model).addAttribute(eq("apiKeys"), eq(page));
-        verify(model).addAttribute(eq("filter"), eq(filter));
+        verify(model).addAttribute("apiKeys", page);
+        verify(model).addAttribute("filter", filter);
         verify(model).addAttribute(eq("paginationModel"), any());
     }
 

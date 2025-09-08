@@ -60,8 +60,8 @@ class HomeControllerTest {
         // Assert
         assertThat(view).isEqualTo("home/index");
         verify(model).addAttribute(FlashMessages.MSG_INFO, "Your logout was successful.");
-        // Verify sorted authorities added to model
-        verify(model).addAttribute(eq("authorities"), eq(List.of("ROLE_A", "ROLE_Z")));
+        // Verify sorted authorities added to the model
+        verify(model).addAttribute("authorities", List.of("ROLE_A", "ROLE_Z"));
     }
 
     @Test
@@ -73,8 +73,8 @@ class HomeControllerTest {
 
         assertThat(view).isEqualTo("home/index");
         // Should add empty authorities
-        verify(model).addAttribute(eq("authorities"), eq(List.of()));
-        // Should not add info message
+        verify(model).addAttribute("authorities", List.of());
+        // Should not add an info message
         verify(model, never()).addAttribute(eq(FlashMessages.MSG_INFO), any());
     }
 }

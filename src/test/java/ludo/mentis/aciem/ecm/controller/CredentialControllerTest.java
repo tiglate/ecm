@@ -69,8 +69,8 @@ class CredentialControllerTest {
         assertThat(view).isEqualTo("credential/list");
         // The controller sets enabled to true if null
         assertThat(filter.getEnabled()).isTrue();
-        verify(model).addAttribute(eq("credentials"), eq(page));
-        verify(model).addAttribute(eq("filter"), eq(filter));
+        verify(model).addAttribute("credentials", page);
+        verify(model).addAttribute("filter", filter);
         verify(model).addAttribute(eq("paginationModel"), any());
     }
 

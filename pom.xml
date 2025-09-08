@@ -18,6 +18,9 @@
         <java.version>17</java.version>
         <sonar.organization>ampliar-project</sonar.organization>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.coverage.exclusions>
+            **/ecm/domain/*,**/ecm/exception/*,**/ecm/config/*,**/ecm/model/*
+        </sonar.coverage.exclusions>
     </properties>
 
     <repositories>
@@ -188,14 +191,6 @@
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>0.8.13</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>ludo/mentis/aciem/ecm/domain/*</exclude>
-                                <exclude>ludo/mentis/aciem/ecm/exception/*</exclude>
-                                <exclude>ludo/mentis/aciem/ecm/config/*</exclude>
-                                <exclude>ludo/mentis/aciem/ecm/model/*</exclude>
-                            </excludes>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
