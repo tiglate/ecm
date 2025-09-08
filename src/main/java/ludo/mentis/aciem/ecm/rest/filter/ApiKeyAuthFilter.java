@@ -25,6 +25,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     private static final String API_PREFIX = "/api/**";
     private static final String HEADER_API_KEY = "X-API-KEY";
     private static final String HEADER_CLIENT_ID = "X-API-CLIENT-ID";
+    public static final String INVALID_CREDENTIALS_MESSAGE = "Invalid client ID or API key.";
 
     private final ApiKeyRepository apiKeyRepository;
     private final PasswordService passwordService;
@@ -59,12 +60,12 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         try {
             Optional<ApiKey> apiKeyOpt = apiKeyRepository.findByClientId(clientId);
             if (apiKeyOpt.isEmpty()) {
-                reject(response, HttpStatus.UNAUTHORIZED, "Invalid client ID or API key.");
+                reject(response, HttpStatus.UNAUTHORIZED, INVALID_CREDENTIALS_MESSAGE);
                 return;
             }
             ApiKey key = apiKeyOpt.get();
             if (key.getCipherEnvelope() == null) {
-                reject(response, HttpStatus.UNAUTHORIZED, "Invalid client ID or API key.");
+                reject(response, HttpStatus.UNAUTHORIZED, INVALID_CREDENTIALS_MESSAGE);
                 return;
             }
             String secret;
@@ -76,7 +77,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                 return;
             }
             if (!providedKey.equals(secret)) {
-                reject(response, HttpStatus.UNAUTHORIZED, "Invalid client ID or API key.");
+                reject(response, HttpStatus.UNAUTHORIZED, INVALID_CREDENTIALS_MESSAGE);
                 return;
             }
             // API key matched; now check server restriction if any

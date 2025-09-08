@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @PreAuthorize("isAuthenticated()")
@@ -29,10 +28,9 @@ public class HomeController {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
         model.addAttribute("authorities", authorities);
 
         return "home/index";
     }
-
 }
