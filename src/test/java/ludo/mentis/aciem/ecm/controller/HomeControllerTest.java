@@ -1,6 +1,6 @@
 package ludo.mentis.aciem.ecm.controller;
 
-import ludo.mentis.aciem.ecm.util.FlashMessages;
+import ludo.mentis.aciem.commons.web.FlashMessages;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

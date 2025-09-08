@@ -1,8 +1,7 @@
 package ludo.mentis.aciem.ecm.service.crypto.aes;
 
-import java.util.Objects;
-
 import javax.crypto.SecretKey;
+import java.util.Objects;
 
 public final class AesServiceConfig {
     // Use exactly one: passphrase OR secretKey

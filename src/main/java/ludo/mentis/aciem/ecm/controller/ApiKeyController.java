@@ -2,12 +2,16 @@ package ludo.mentis.aciem.ecm.controller;
 
 
 import jakarta.validation.Valid;
+import ludo.mentis.aciem.commons.web.CustomCollectors;
+import ludo.mentis.aciem.commons.web.FlashMessages;
+import ludo.mentis.aciem.commons.web.PaginationUtils;
+import ludo.mentis.aciem.commons.web.SortUtils;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.model.ApiKeyDTO;
 import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.ApiKeyService;
-import ludo.mentis.aciem.ecm.util.*;
+import ludo.mentis.aciem.ecm.util.UserRoles;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,15 +39,20 @@ public class ApiKeyController {
     private static final String CONTROLLER_VIEW = "apiKey/view";
     private static final String CONTROLLER_LIST = "apiKey/list";
     private static final String REDIRECT_TO_CONTROLLER_INDEX = "redirect:/apiKeys";
-    private final ApiKeyService apiKeyService;
-    private final BusinessAppRepository applicationRepository;
-    private final SortUtils sortUtils;
 
-    public ApiKeyController(final ApiKeyService apiKeyService,
-                                final BusinessAppRepository applicationRepository) {
+    private final SortUtils sortUtils;
+    private final ApiKeyService apiKeyService;
+    private final PaginationUtils paginationUtils;
+    private final BusinessAppRepository applicationRepository;
+
+    public ApiKeyController(final SortUtils sortUtils,
+                            final ApiKeyService apiKeyService,
+                            final PaginationUtils paginationUtils,
+                            final BusinessAppRepository applicationRepository) {
+        this.sortUtils = sortUtils;
         this.apiKeyService = apiKeyService;
+        this.paginationUtils = paginationUtils;
         this.applicationRepository = applicationRepository;
-        this.sortUtils = new SortUtils();
     }
 
     @ModelAttribute
@@ -51,7 +60,7 @@ public class ApiKeyController {
         model.addAttribute("environmentValues", Environment.values());
         model.addAttribute("applicationValues", applicationRepository.findAll(Sort.by("name"))
                 .stream()
-                .collect(CustomCollectors.toSortedMap(BusinessApp::getId, BusinessApp::getName)));
+                .collect(CustomCollectors.toLinkedHashMap(BusinessApp::getId, BusinessApp::getName)));
     }
 
     @GetMapping
@@ -75,7 +84,7 @@ public class ApiKeyController {
         final var apiKeys = apiKeyService.findAll(filter, pageRequest);
         model.addAttribute("apiKeys", apiKeys);
         model.addAttribute("filter", filter);
-        model.addAttribute("paginationModel", PaginationUtils.getPaginationModel(apiKeys));
+        model.addAttribute("paginationModel", paginationUtils.getPaginationModel(apiKeys));
         return CONTROLLER_LIST;
     }
 

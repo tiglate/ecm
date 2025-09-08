@@ -1,7 +1,7 @@
 package ludo.mentis.aciem.ecm.controller;
 
+import ludo.mentis.aciem.commons.web.FlashMessages;
 import ludo.mentis.aciem.ecm.model.AuthenticationRequest;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

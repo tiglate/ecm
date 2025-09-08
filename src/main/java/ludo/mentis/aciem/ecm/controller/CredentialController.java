@@ -1,11 +1,15 @@
 package ludo.mentis.aciem.ecm.controller;
 
 
+import ludo.mentis.aciem.commons.web.CustomCollectors;
+import ludo.mentis.aciem.commons.web.FlashMessages;
+import ludo.mentis.aciem.commons.web.PaginationUtils;
+import ludo.mentis.aciem.commons.web.SortUtils;
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.model.*;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.CredentialService;
-import ludo.mentis.aciem.ecm.util.*;
+import ludo.mentis.aciem.ecm.util.UserRoles;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,15 +38,20 @@ public class CredentialController {
     private static final String CONTROLLER_LIST = "credential/list";
     private static final String CONTROLLER_HISTORY = "credential/history";
     private static final String REDIRECT_TO_CONTROLLER_INDEX = "redirect:/credentials";
+
+    private final SortUtils sortUtils;
+    private final PaginationUtils paginationUtils;
     private final CredentialService credentialService;
     private final BusinessAppRepository applicationRepository;
-    private final SortUtils sortUtils;
 
-    public CredentialController(final CredentialService credentialService,
+    public CredentialController(final SortUtils sortUtils,
+                                final PaginationUtils paginationUtils,
+                                final CredentialService credentialService,
                                 final BusinessAppRepository applicationRepository) {
+        this.sortUtils = sortUtils;
+        this.paginationUtils = paginationUtils;
         this.credentialService = credentialService;
         this.applicationRepository = applicationRepository;
-        this.sortUtils = new SortUtils();
     }
 
     @ModelAttribute
@@ -51,7 +60,7 @@ public class CredentialController {
         model.addAttribute("credentialTypeValues", CredentialType.values());
         model.addAttribute("applicationValues", applicationRepository.findAll(Sort.by("name"))
                 .stream()
-                .collect(CustomCollectors.toSortedMap(BusinessApp::getId, BusinessApp::getName)));
+                .collect(CustomCollectors.toLinkedHashMap(BusinessApp::getId, BusinessApp::getName)));
     }
 
     @PreAuthorize("hasAnyAuthority('" + UserRoles.ADMIN + "', '" + UserRoles.DEVELOPER + "')")
@@ -78,7 +87,7 @@ public class CredentialController {
         final var credentials = credentialService.findAll(filter, pageRequest);
         model.addAttribute("credentials", credentials);
         model.addAttribute("filter", filter);
-        model.addAttribute("paginationModel", PaginationUtils.getPaginationModel(credentials));
+        model.addAttribute("paginationModel", paginationUtils.getPaginationModel(credentials));
         return CONTROLLER_LIST;
     }
 

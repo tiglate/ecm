@@ -1,8 +1,8 @@
 package ludo.mentis.aciem.ecm.service;
 
 import ludo.mentis.aciem.ecm.domain.BusinessApp;
-import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.domain.CipherEnvelopeEntity;
+import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.exception.IllegalOperationException;
 import ludo.mentis.aciem.ecm.exception.NotFoundException;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
@@ -19,12 +19,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class CredentialServiceImplTest {

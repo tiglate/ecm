@@ -9,7 +9,8 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class BusinessAppNameUniqueValidatorTest {

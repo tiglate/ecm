@@ -1,7 +1,7 @@
 package ludo.mentis.aciem.ecm.service;
 
-import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.domain.CipherEnvelopeEntity;
+import ludo.mentis.aciem.ecm.domain.Credential;
 import ludo.mentis.aciem.ecm.exception.NotFoundException;
 import ludo.mentis.aciem.ecm.model.CredentialType;
 import ludo.mentis.aciem.ecm.model.Environment;
@@ -13,9 +13,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CredentialRestServiceImplTest {
 

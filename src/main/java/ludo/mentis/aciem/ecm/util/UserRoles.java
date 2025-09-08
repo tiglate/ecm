@@ -7,5 +7,5 @@ public class UserRoles {
     }
 
     public static final String ADMIN = "ROLE_ECM_ADMIN";
-    public static final String DEVELOPER = "ROLE_HOME";
+    public static final String DEVELOPER = "ROLE_ECM_DEVELOPER";
 }

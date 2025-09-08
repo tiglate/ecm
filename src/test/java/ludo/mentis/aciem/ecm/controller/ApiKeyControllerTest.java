@@ -1,14 +1,15 @@
 package ludo.mentis.aciem.ecm.controller;
 
+import ludo.mentis.aciem.commons.web.FlashMessages;
+import ludo.mentis.aciem.commons.web.PaginationUtils;
+import ludo.mentis.aciem.commons.web.SortUtils;
 import ludo.mentis.aciem.ecm.model.ApiKeyDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.ApiKeyService;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,12 @@ class ApiKeyControllerTest {
     private ApiKeyController controller;
 
     @Mock
+    private SortUtils sortUtils;
+
+    @Mock
+    private PaginationUtils paginationUtils;
+
+    @Mock
     private ApiKeyService apiKeyService;
 
     @Mock
@@ -45,17 +52,17 @@ class ApiKeyControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // prepareContext may be called by MVC typically; in direct invocation we don't need it for these tests
+        // prepareContext may be called by MVC typically; in direct invocation we stub repository sort-dependent call
         when(businessAppRepository.findAll(any(Sort.class))).thenReturn(List.of());
-        controller = new ApiKeyController(apiKeyService, businessAppRepository);
+        when(sortUtils.addSortAttributesToModel(any(), any(), any(), any())).thenReturn(Sort.by(Sort.Order.desc("id")));
+        controller = new ApiKeyController(sortUtils, apiKeyService, paginationUtils, businessAppRepository);
     }
 
-    /*
     @Test
     void list_shouldPopulateModelAndReturnListView() {
         ApiKeyDTO filter = new ApiKeyDTO();
-        Pageable pageable = PageRequest.of(0, 20);
-        Page<ApiKeyDTO> page = new PageImpl<>(List.of(), pageable, 0);
+        var pageable = PageRequest.of(0, 20);
+        var page = new PageImpl<ApiKeyDTO>(List.of(), pageable, 0);
         doReturn(page).when(apiKeyService).findAll(any(ApiKeyDTO.class), any(Pageable.class));
 
         String view = controller.list(filter, null, pageable, model);
@@ -64,7 +71,7 @@ class ApiKeyControllerTest {
         verify(model).addAttribute(eq("apiKeys"), eq(page));
         verify(model).addAttribute(eq("filter"), eq(filter));
         verify(model).addAttribute(eq("paginationModel"), any());
-    }*/
+    }
 
     @Test
     void view_shouldAddApiKeyToModelAndReturnView() {

@@ -1,8 +1,8 @@
 package ludo.mentis.aciem.ecm.controller;
 
+import ludo.mentis.aciem.commons.web.*;
 import ludo.mentis.aciem.ecm.model.BusinessAppDTO;
 import ludo.mentis.aciem.ecm.service.BusinessAppService;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,7 +20,16 @@ class BusinessAppControllerTest {
     private BusinessAppController controller;
 
     @Mock
+    private SortUtils sortUtils;
+
+    @Mock
+    private PaginationUtils paginationUtils;
+
+    @Mock
     private BusinessAppService businessAppService;
+
+    @Mock
+    private GlobalizationUtils globalizationUtils;
 
     @Mock
     private Model model;
@@ -34,7 +43,8 @@ class BusinessAppControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller = new BusinessAppController(businessAppService);
+        when(sortUtils.addSortAttributesToModel(any(), any(), any(), any())).thenReturn(org.springframework.data.domain.Sort.by("id"));
+        controller = new BusinessAppController(sortUtils, paginationUtils, businessAppService, globalizationUtils);
     }
 
     @Test
@@ -106,7 +116,7 @@ class BusinessAppControllerTest {
         verify(businessAppService).update(eq(6L), any(BusinessAppDTO.class));
         verify(redirectAttributes).addFlashAttribute(eq(FlashMessages.MSG_SUCCESS), any());
     }
-/*
+
     @Test
     void deletePost_withReferencedWarning_shouldNotDeleteAndAddErrorFlash() {
         ReferencedWarning warning = new ReferencedWarning();
@@ -119,7 +129,7 @@ class BusinessAppControllerTest {
         verify(businessAppService, never()).delete(anyLong());
         verify(redirectAttributes).addFlashAttribute(eq(FlashMessages.MSG_ERROR), any());
     }
-*/
+
     @Test
     void deletePost_withoutReferencedWarning_shouldDeleteAndAddSuccessFlash() {
         when(businessAppService.getReferencedWarning(10L)).thenReturn(null);

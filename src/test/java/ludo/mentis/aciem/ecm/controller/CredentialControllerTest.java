@@ -1,18 +1,16 @@
 package ludo.mentis.aciem.ecm.controller;
 
+import ludo.mentis.aciem.commons.web.FlashMessages;
+import ludo.mentis.aciem.commons.web.PaginationUtils;
+import ludo.mentis.aciem.commons.web.SortUtils;
 import ludo.mentis.aciem.ecm.model.CredentialDTO;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
 import ludo.mentis.aciem.ecm.service.CredentialService;
-import ludo.mentis.aciem.ecm.util.FlashMessages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,11 +19,18 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class CredentialControllerTest {
 
     private CredentialController controller;
+
+    @Mock
+    private SortUtils sortUtils;
+
+    @Mock
+    private PaginationUtils paginationUtils;
 
     @Mock
     private CredentialService credentialService;
@@ -46,7 +51,10 @@ class CredentialControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(businessAppRepository.findAll(any(Sort.class))).thenReturn(List.of());
-        controller = new CredentialController(credentialService, businessAppRepository);
+        // Provide default sort behavior used by list()
+        when(sortUtils.addSortAttributesToModel(any(), any(), any(), any()))
+                .thenReturn(Sort.by(Sort.Order.desc("id")));
+        controller = new CredentialController(sortUtils, paginationUtils, credentialService, businessAppRepository);
     }
 
     @Test

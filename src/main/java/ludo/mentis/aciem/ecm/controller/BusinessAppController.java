@@ -2,9 +2,10 @@ package ludo.mentis.aciem.ecm.controller;
 
 
 import jakarta.validation.Valid;
+import ludo.mentis.aciem.commons.web.*;
 import ludo.mentis.aciem.ecm.model.BusinessAppDTO;
 import ludo.mentis.aciem.ecm.service.BusinessAppService;
-import ludo.mentis.aciem.ecm.util.*;
+import ludo.mentis.aciem.ecm.util.UserRoles;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,12 +33,21 @@ public class BusinessAppController {
     private static final String CONTROLLER_VIEW = "businessApp/view";
     private static final String CONTROLLER_LIST = "businessApp/list";
     private static final String REDIRECT_TO_CONTROLLER_INDEX = "redirect:/applications";
-    private final BusinessAppService businessAppService;
-    private final SortUtils sortUtils;
 
-    public BusinessAppController(final BusinessAppService businessAppService) {
+    private final SortUtils sortUtils;
+    private final PaginationUtils paginationUtils;
+    private final BusinessAppService businessAppService;
+    private final GlobalizationUtils globalizationUtils;
+
+
+    public BusinessAppController(final SortUtils sortUtils,
+                                 final PaginationUtils paginationUtils,
+                                 final BusinessAppService businessAppService,
+                                 final GlobalizationUtils globalizationUtils) {
+        this.sortUtils = sortUtils;
+        this.paginationUtils = paginationUtils;
         this.businessAppService = businessAppService;
-        this.sortUtils = new SortUtils();
+        this.globalizationUtils = globalizationUtils;
     }
 
     @GetMapping
@@ -57,7 +67,7 @@ public class BusinessAppController {
         final var businessApps = businessAppService.findAll(filter, pageRequest);
         model.addAttribute("businessApps", businessApps);
         model.addAttribute("filter", filter);
-        model.addAttribute("paginationModel", PaginationUtils.getPaginationModel(businessApps));
+        model.addAttribute("paginationModel", paginationUtils.getPaginationModel(businessApps));
         return CONTROLLER_LIST;
     }
 
@@ -107,7 +117,7 @@ public class BusinessAppController {
         final ReferencedWarning referencedWarning = businessAppService.getReferencedWarning(id);
         if (referencedWarning != null) {
             redirectAttributes.addFlashAttribute(FlashMessages.MSG_ERROR,
-                    GlobalizationUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
+                    globalizationUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
         } else {
             businessAppService.delete(id);
             FlashMessages.deleteSuccess(redirectAttributes, ENTITY_NAME);

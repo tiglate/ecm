@@ -1,5 +1,7 @@
 package ludo.mentis.aciem.ecm.util;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -7,8 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-
-import org.springframework.stereotype.Component;
 
 @Component
 public class RandomUtilsImpl implements RandomUtils {
