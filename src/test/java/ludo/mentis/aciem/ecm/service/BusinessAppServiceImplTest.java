@@ -18,7 +18,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class BusinessAppServiceImplTest {
@@ -46,7 +45,7 @@ class BusinessAppServiceImplTest {
         var out = service.findAll(search, pageable);
 
         assertThat(out).isSameAs(expected);
-        verify(businessAppRepository).findAllBySearchCriteria(eq("C"), eq("N"), eq(pageable));
+        verify(businessAppRepository).findAllBySearchCriteria("C", "N", pageable);
     }
 
     @Test
@@ -100,7 +99,8 @@ class BusinessAppServiceImplTest {
     @Test
     void update_notFound_throws() {
         when(businessAppRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> service.update(2L, new BusinessAppDTO())).isInstanceOf(NotFoundException.class);
+        var dto = new BusinessAppDTO();
+        assertThatThrownBy(() -> service.update(2L, dto)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

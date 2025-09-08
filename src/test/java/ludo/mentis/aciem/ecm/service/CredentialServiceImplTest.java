@@ -25,7 +25,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class CredentialServiceImplTest {
@@ -59,7 +58,7 @@ class CredentialServiceImplTest {
 
         var out = service.findAll(search, pageable);
         assertThat(out).isSameAs(expected);
-        verify(credentialRepository).findAllBySearchCriteria(eq(1L), eq(Environment.DEV.getId()), eq(CredentialType.DATABASE.getId()), eq(true), eq("me"), eq("u"), eq(pageable));
+        verify(credentialRepository).findAllBySearchCriteria(1L, Environment.DEV.getId(), CredentialType.DATABASE.getId(), true, "me", "u", pageable);
     }
 
     @Test
@@ -142,7 +141,8 @@ class CredentialServiceImplTest {
         old.setNextCredential(new Credential());
         when(credentialRepository.findById(1L)).thenReturn(Optional.of(old));
 
-        assertThatThrownBy(() -> service.update(1L, new CredentialDTO()))
+        var dto = new CredentialDTO();
+        assertThatThrownBy(() -> service.update(1L, dto))
                 .isInstanceOf(IllegalOperationException.class);
     }
 

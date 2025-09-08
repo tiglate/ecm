@@ -1,7 +1,6 @@
 package ludo.mentis.aciem.ecm.rest.filter;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ludo.mentis.aciem.ecm.domain.ApiKey;
@@ -46,7 +45,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws IOException {
 
         String providedKey = extractApiKey(request);
         String clientId = extractClientId(request);
@@ -68,12 +67,8 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                 reject(response, HttpStatus.UNAUTHORIZED, INVALID_CREDENTIALS_MESSAGE);
                 return;
             }
-            String secret;
-            try {
-                secret = passwordService.decryptPasswordFromEntity(key.getCipherEnvelope());
-            } catch (Exception e) {
-                log.warn("Failed to decrypt API key id={}", key.getId(), e);
-                reject(response, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error while validating API key.");
+            var secret = decryptApiKeySecret(key, response);
+            if (secret == null) {
                 return;
             }
             if (!providedKey.equals(secret)) {
@@ -86,12 +81,21 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                 reject(response, HttpStatus.FORBIDDEN, "API key is not allowed from this host.");
                 return;
             }
-
             // Authorized
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
             log.error("Error while validating API key", ex);
             reject(response, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error while validating API key.");
+        }
+    }
+
+    private String decryptApiKeySecret(ApiKey key, HttpServletResponse response) throws IOException {
+        try {
+            return passwordService.decryptPasswordFromEntity(key.getCipherEnvelope());
+        } catch (Exception e) {
+            log.warn("Failed to decrypt API key id={}", key.getId(), e);
+            reject(response, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error while validating API key.");
+            return null;
         }
     }
 

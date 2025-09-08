@@ -134,7 +134,7 @@ public class CredentialServiceImpl implements CredentialService {
         credential.setEnvironment(credentialDTO.getEnvironment());
         credential.setCredentialType(credentialDTO.getCredentialType());
         credential.setUsername(credentialDTO.getUsername());
-        credential.setVersion(1); //TODO: credentialDTO.getVersion());
+        credential.setVersion(credentialDTO.getVersion() != null ? credentialDTO.getVersion() : 1);
         credential.setEnabled(credentialDTO.getEnabled());
         credential.setUrl(credentialDTO.getUrl());
         credential.setNotes(credentialDTO.getNotes());

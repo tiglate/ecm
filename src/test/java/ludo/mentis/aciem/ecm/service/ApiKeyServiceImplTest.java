@@ -57,7 +57,7 @@ class ApiKeyServiceImplTest {
         Page<ApiKeySearchDTO> out = service.findAll(search, pageable);
 
         assertThat(out).isSameAs(expected);
-        verify(apiKeyRepository).findAllBySearchCriteria(eq(10L), eq(Environment.DEV.getId()), eq("user"), eq("cli"), eq("srv"), eq(pageable));
+        verify(apiKeyRepository).findAllBySearchCriteria(10L, Environment.DEV.getId(), "user", "cli", "srv", pageable);
     }
 
     @Test
@@ -123,7 +123,7 @@ class ApiKeyServiceImplTest {
         assertThat(ent.getEnvironment()).isEqualTo(Environment.PROD);
         assertThat(ent.getClientId()).isEqualTo("c");
         assertThat(ent.getServer()).isEqualTo("s");
-        verify(passwordService).encryptPasswordToEntity(eq("sec"));
+        verify(passwordService).encryptPasswordToEntity("sec");
     }
 
     @Test
@@ -156,7 +156,8 @@ class ApiKeyServiceImplTest {
     @Test
     void update_notFound_throws() {
         when(apiKeyRepository.findById(3L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> service.update(3L, new ApiKeyDTO())).isInstanceOf(NotFoundException.class);
+        var dto = new ApiKeyDTO();
+        assertThatThrownBy(() -> service.update(3L, dto)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

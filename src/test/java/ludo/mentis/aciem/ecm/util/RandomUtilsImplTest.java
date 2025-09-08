@@ -37,7 +37,8 @@ class RandomUtilsImplTest {
 
     @Test
     void testCreateRandomSublist_EmptySourceButPositiveN_Throws() {
-        assertThrows(IllegalArgumentException.class, () -> randomUtils.createRandomSublist(List.of(), 1));
+        var list = List.of();
+        assertThrows(IllegalArgumentException.class, () -> randomUtils.createRandomSublist(list, 1));
     }
 
     @Test
