@@ -1,5 +1,6 @@
 package ludo.mentis.aciem.ecm.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
@@ -19,10 +20,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class LdapSecurityConfig {
 
     @Bean
-    LdapAuthoritiesPopulator authorities(BaseLdapPathContextSource contextSource) {
+    LdapAuthoritiesPopulator authorities(BaseLdapPathContextSource contextSource, @Value("${LDAP_BASE}") String ldapBase) {
         var groupSearchBase = "ou=Groups";
         var authorities = new DefaultLdapAuthoritiesPopulator(contextSource, groupSearchBase);
-        authorities.setGroupSearchFilter("(member={0})");
+        authorities.setGroupSearchFilter("(member=uid={1}," + ldapBase + ")");
         return authorities;
     }
 
