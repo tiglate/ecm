@@ -2,21 +2,20 @@ package ludo.mentis.aciem.ecm.util;
 
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class RandomUtilsImpl implements RandomUtils {
 
-    private final Random random;
+    private final SecureRandom random;
 
     public RandomUtilsImpl() {
-        this.random = new Random();
+        this.random = new SecureRandom();
     }
 
     @Override
@@ -29,9 +28,6 @@ public class RandomUtilsImpl implements RandomUtils {
         }
         if (n == 0) {
             return new ArrayList<>();
-        }
-        if (list.isEmpty()) {
-            throw new IllegalArgumentException("Cannot pick elements from an empty list.");
         }
         List<T> tempList = new ArrayList<>(list);
         Collections.shuffle(tempList, random);
@@ -56,7 +52,7 @@ public class RandomUtilsImpl implements RandomUtils {
     @Override
     public LocalDate getRandomDate(LocalDate start, LocalDate end) {
         long days = ChronoUnit.DAYS.between(start, end);
-        long randomDays = ThreadLocalRandom.current().nextLong(days + 1);
+        long randomDays = this.random.nextLong(days + 1);
         return start.plusDays(randomDays);
     }
 

@@ -41,7 +41,7 @@ class DevAppRunnerTest {
 
     @Test
     @DisplayName("canItRun() returns true when no profiles are active")
-    void canItRun_noProfiles_true() throws Exception {
+    void canItRun_noProfiles_true() {
         when(environment.getActiveProfiles()).thenReturn(new String[]{});
         var runner = new DevAppRunner(List.of(), environment);
         assertTrue(runner.canItRun());

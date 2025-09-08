@@ -111,8 +111,8 @@ public class ApiKey {
         return server;
     }
 
-    public void setServer(String Server) {
-        this.server = Server;
+    public void setServer(String server) {
+        this.server = server;
     }
 
     public String getUpdatedBy() {
