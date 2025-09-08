@@ -26,9 +26,7 @@ public class HtmxErrorController {
 
     @RequestMapping(value = "${server.error.path:${error.path:/error}}", headers = "HX-Request=true")
     @ResponseStatus(HttpStatus.OK)
-    public ModelAndView errorHtmx(final HttpServletRequest request,
-            final HttpServletResponse response) {
+    public ModelAndView errorHtmx(final HttpServletRequest request, final HttpServletResponse response) {
         return basicErrorController.errorHtml(request, response);
     }
-
 }

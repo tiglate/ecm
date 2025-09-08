@@ -1,6 +1,7 @@
 package ludo.mentis.aciem.ecm.dev;
 
 import ludo.mentis.aciem.ecm.domain.ApiKey;
+import ludo.mentis.aciem.ecm.domain.BusinessApp;
 import ludo.mentis.aciem.ecm.model.Environment;
 import ludo.mentis.aciem.ecm.repos.ApiKeyRepository;
 import ludo.mentis.aciem.ecm.repos.BusinessAppRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApiKeysLoader implements DataLoaderCommand {
 
+    public static final int MAX_TO_CREATE = 30;
     private final ApiKeyRepository apiKeyRepository;
     private final BusinessAppRepository applicationRepository;
     private final RandomUtils randomUtils;
@@ -82,51 +84,66 @@ public class ApiKeysLoader implements DataLoaderCommand {
 
     @Override
     public int run() {
-        var created = 0;
-        var faker = new Faker();
-
         var apps = this.applicationRepository.findAll();
-        if (apps == null || apps.isEmpty()) {
+        if (apps.isEmpty()) {
             return 0;
         }
+        return createApiKeysForApps(apps);
+    }
 
-        // Iterate deterministically over all app/environment pairs to avoid duplicates
+    protected int createApiKeysForApps(java.util.List<BusinessApp> apps) {
+        var faker = new Faker();
+        int created = 0;
         for (var app : apps) {
-            if (created >= 30) {
+            if (created >= MAX_TO_CREATE) {
                 break;
             }
-            for (var environment : Environment.values()) {
-                if (created >= 30) {
-                    break;
-                }
-                // Skip if a record already exists for this (application, environment)
-                if (apiKeyRepository.existsByApplicationIdAndEnvironmentId(app.getId(), environment.getId())) {
-                    continue;
-                }
+            created += createApiKeysForApp(app, faker, MAX_TO_CREATE - created);
+        }
+        return created;
+    }
 
-                var apiKey = new ApiKey();
-                apiKey.setApplication(app);
-
-                var secret = apiKeyUtils.generateApiKey();
-                if (secret == null) {
-                    // In tests, ApiKeyUtils may be a mock without stubbing; avoid passing null to password service
-                    secret = "";
-                }
-                var envelop = passwordService.encryptPasswordToEntity(secret);
-                apiKey.setCipherEnvelope(envelop);
-
-                apiKey.setClientId(faker.internet().uuid());
-                apiKey.setEnvironment(environment);
-                apiKey.setServer(getRandomServerName(environment));
-
-                apiKey.setUpdatedBy(faker.name().firstName());
-
+    protected int createApiKeysForApp(BusinessApp app, Faker faker, int remainingQuota) {
+        int created = 0;
+        for (var environment : Environment.values()) {
+            if (created >= remainingQuota) {
+                break;
+            }
+            if (!shouldSkip(app, environment)) {
+                var apiKey = buildApiKey(app, environment, faker);
                 apiKeyRepository.save(apiKey);
                 created++;
             }
         }
-
         return created;
+    }
+
+    private boolean shouldSkip(BusinessApp app, Environment environment) {
+        return apiKeyRepository.existsByApplicationIdAndEnvironmentId(getAppId(app), environment.getId());
+    }
+
+    private Long getAppId(BusinessApp app) {
+        return app.getId();
+    }
+
+    protected ApiKey buildApiKey(BusinessApp app, Environment environment, Faker faker) {
+        var apiKey = new ApiKey();
+        apiKey.setApplication(app);
+
+        var secret = safeGenerateSecret();
+        var envelop = passwordService.encryptPasswordToEntity(secret);
+        apiKey.setCipherEnvelope(envelop);
+
+        apiKey.setClientId(faker.internet().uuid());
+        apiKey.setEnvironment(environment);
+        apiKey.setServer(getRandomServerName(environment));
+        apiKey.setUpdatedBy(faker.name().firstName());
+        return apiKey;
+    }
+
+    private String safeGenerateSecret() {
+        var secret = apiKeyUtils.generateApiKey();
+        return secret == null ? "" : secret;
     }
 
     protected String getRandomServerName(Environment environment) {

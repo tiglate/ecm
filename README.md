@@ -1,5 +1,7 @@
 # Enterprise Credentials Manager (ECM) 🔐
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tiglate_ecm&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tiglate_ecm)
+
 Enterprise Credentials Manager is a self-hosted tool to store credentials encrypted in a database and retrieve them via a web UI or a REST API.
 
 The project follows conventional Spring Boot patterns with Flyway migrations and LDAP-based authentication. It aims to stay minimal and straightforward.
